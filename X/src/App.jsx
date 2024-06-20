@@ -5,11 +5,11 @@ import {Outlet} from "react-router-dom"
 function App() {
     return(
         <>
-        <div className="bg-red grid h-full grid-cols-[300px,auto,auto]">
+        <div className="bg-red grid h-full grid-cols-[20%,70%]">
             <div>
                 <Sidebar/>
             </div>
-            <div>
+            <div className="overflow-y-auto px-2">
                 <Outlet/>
             </div>
         </div>
