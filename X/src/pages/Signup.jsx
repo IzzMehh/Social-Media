@@ -2,7 +2,7 @@ import React from 'react'
 import {useForm} from "react-hook-form"
 import {Link} from "react-router-dom"
 
-function Login() {
+function Signup() {
   const {register,handleSubmit,formState:{errors}} = useForm()
 
   const con = (data) =>{
@@ -15,10 +15,20 @@ function Login() {
         <div className='mt-[50px]  flex  justify-center w-[600px]'>
           <div className='w-[90%]'>
         <div className='text-4xl font-title font-bold text-[#474BCA] mb-5'>VeWen</div>
-        <div className='text-4xl font-content font-bold mb-2'>Login now</div>
-        <div className='text-xl'>Hi, Welcome back 👋 </div>
+        <div className='text-4xl font-content font-bold mb-2'>Signup now</div>
+        <div className='text-xl'>Create an account 👀</div>
         
         <form onSubmit={handleSubmit(con)} className='mt-5'>
+
+        <label htmlFor="" className=' font-content text-xl font-semibold'>Username</label>
+          <div className='mt-2 mb-2'>
+          <input {...register('name',{required:"Please Enter the Email",pattern:{
+            value:/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/igm,
+            message:"Username must start with an alphanumeric character, don't have consecutive dots, and not end with a dot.",
+          }})} placeholder='Enter your username' className='px-3 py-2 outline-none bg-transparent border rounded-lg w-[90%]' type="text" name="name" />
+          </div>
+          {errors.name && <p className='text-red-600'>{errors.name.message}</p> }
+
           <label htmlFor="" className=' font-content text-xl font-semibold'>Email</label>
           <div className='mt-2 mb-2'>
           <input {...register('email',{required:"Please Enter the Email",pattern:{
@@ -43,8 +53,8 @@ function Login() {
           </div>
           {errors.password && <p className='text-red-600'>{errors.password.message}</p> }
 
-          <button className='bg-blue-700 w-[90%] py-3 rounded-md mt-3'>Login</button>
-          <div className=' text-sm mt-2 sm:text-base'>Not registered yet? <span className='text-blue-600'>Create an account</span> <Link to="/signup" className='text-[#FFA3BE]'>SignUp</Link></div>
+          <button className='bg-blue-700 w-[90%] py-3 rounded-md mt-3'>Sign Up</button>
+          <div className=' text-sm mt-2 sm:text-base'>Already have an account? <span className='text-blue-600'>Create an account</span> <Link to="/login" className='text-[#FFA3BE]'>Login</Link></div>
           
         </form>
         </div>
@@ -58,4 +68,4 @@ function Login() {
   )
 }
 
-export default Login
+export default Signup
