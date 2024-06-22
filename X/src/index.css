@@ -8,3 +8,7 @@
 :root{
   background-color: #0c0c0c;
 }
+
+::backdrop{
+  background: #0c0c0c73;
+}
