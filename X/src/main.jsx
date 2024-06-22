@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import {RouterProvider,createRoutesFromElements, createBrowserRouter , Route} from "react-router-dom"
-import {Home,Login,Signup} from './pages/index.js'
+import {Home,Login,Signup,About} from './pages/index.js'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
     <Route path='/' element={<App/>}>
       <Route path='home' element={<Home/>}/>
-      {/* <Route path='login' element={<Login/>}/> */}
+      <Route path='about' element={<About/>}/>
     </Route>
       <Route path='login' element={<Login/>}/>
       <Route path='signup' element={<Signup/>}/>

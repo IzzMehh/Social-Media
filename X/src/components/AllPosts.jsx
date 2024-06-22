@@ -30,7 +30,7 @@ function AllPosts({userId,postId,content,likes,comments,userName = 'IzzMehGaurav
                 <div className='flex mt-2'>
                 <Link to={`/user/${userId}`} className='text-xl cursor-pointer mr-1'><ion-icon name="chatbox-ellipses-outline"></ion-icon></Link>
                 <span className='mr-5'>{comments || 999}</span>
-                <Link to={''} className='text-xl cursor-pointer mr-1'><ion-icon name="heart-outline"></ion-icon></Link>
+                <Link to={'/home'} className='text-xl cursor-pointer mr-1'><ion-icon name="heart-outline"></ion-icon></Link>
                 <span className=''>{likes || 9999}</span>
                 </div>
             </div>
