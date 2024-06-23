@@ -22,6 +22,34 @@ class AuthService {
         }
     }
 
+    async login({email,password}){
+        try {
+            const loginData = await this.account.createEmailPasswordSession(email,password)
+            console.log(loginData)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async getCurrentUser(){
+        try {
+            const userData = await this.account.get()
+            console.log(userData)
+            return userData
+        } catch (error) {
+            console.log(error)            
+        }
+        return null
+    }
+
+    async logout(){
+        try {
+            await account.deleteSession()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 }
 
 const authservice = new AuthService
