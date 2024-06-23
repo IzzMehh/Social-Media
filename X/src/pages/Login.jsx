@@ -1,13 +1,14 @@
 import React from 'react'
 import {useForm} from "react-hook-form"
 import {Link} from "react-router-dom"
+import authservice from '../appwrite/Auth'
 
 function Login() {
   const {register,handleSubmit,formState:{errors}} = useForm()
 
   const con = (data) =>{
-    data.preventDefault
     console.log(data)
+    authservice.login(data)
   }
   return (
     <div className='w-full flex'>
