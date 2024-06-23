@@ -1,15 +1,34 @@
 import React from 'react'
 import {useForm} from "react-hook-form"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import authservice from '../appwrite/Auth'
+import {useDispatch} from "react-redux"
+import { login,logout } from '../store/authSlice'
 
 function Login() {
   const {register,handleSubmit,formState:{errors}} = useForm()
 
-  const con = (data) =>{
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const con = async(data) =>{
     console.log(data)
-    authservice.login(data)
+    try {
+      const session = await authservice.login(data)
+      if(session){
+        const userData = await authservice.getCurrentUser()
+        if(userData){
+          dispatch(login(userData))
+          navigate('/home')
+          console.log(userData)
+        }
+      }
+      
+    } catch (error) {
+      
+    }
   }
+  
   return (
     <div className='w-full flex'>
       <div className='text-white flex justify-center w-full lg:w-[60%] '>

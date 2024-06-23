@@ -17,6 +17,7 @@ class AuthService {
         try {
         const userAccount = await this.account.create(ID.unique(),email,password,name)
         console.log(userAccount)
+        return userAccount
         } catch (error) {
             console.log(error)
         }
@@ -26,6 +27,7 @@ class AuthService {
         try {
             const loginData = await this.account.createEmailPasswordSession(email,password)
             console.log(loginData)
+            return loginData
         } catch (error) {
             console.log(error)
         }
