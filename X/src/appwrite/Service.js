@@ -52,15 +52,17 @@ class AppService{
         }
     }
 
-    async createPost({content,image=[],userId}){
+    async createPost(content,image,userId){
         try {
             return await this.database.createDocument(
                 config.appwriteDatabaseId,
-                appwriteCollectionId,
+                config.appwriteCollectionId,
                 ID.unique(),
                 {
-                    content,
-                    image,
+                    'content' : content,
+                    'images': image,
+                    'likes': 0,
+                    userId:userId
                 }
             )
         } catch (error) {

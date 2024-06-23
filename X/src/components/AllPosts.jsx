@@ -1,8 +1,16 @@
 import React from 'react'
 import {Link} from "react-router-dom"
+import service from '../appwrite/Service'
 
-function AllPosts({userId,postId,content,likes,comments,userName = 'IzzMehGaurav'}) {
-
+function AllPosts({userId,postId,images,content,likes,comments,userName = 'IzzMehGaurav'}) {
+  const imgs = []
+  const showImages = () =>{
+    for(const i in images){
+      const img = service.getFilePreview(images[i])
+      imgs.push(img)
+    }
+  }
+  showImages()
   return (
     <>
 <Link to={`/posts/${postId}`}>
@@ -26,6 +34,11 @@ function AllPosts({userId,postId,content,likes,comments,userName = 'IzzMehGaurav
                     If you disagree with this, to Mirzapur ka trailer kaisa laga? 😂`
                   
                   }
+                </div>
+                <div className={`${(imgs.length > 0) ? 'h-[500px]': 'hidden'}} ${(imgs.length > 1) ? `grid grid-cols-2 `: 'grid grid-rows-1 ' } ${(imgs.length > 2) ? `grid-rows-2 `: '' } gap-2`}>
+                  {imgs && imgs.map((url)=>(
+                    <img className='h-full' src={url}></img>
+                  ))}
                 </div>
                 <div className='flex mt-2'>
                 <Link to={`/user/${userId}`} className='text-xl cursor-pointer mr-1'><ion-icon name="chatbox-ellipses-outline"></ion-icon></Link>
