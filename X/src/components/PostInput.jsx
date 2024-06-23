@@ -1,15 +1,31 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import service from '../appwrite/Service';
+import { useSelector } from 'react-redux';
 
 function PostInput() {
   const inputDiv = useRef(null);
   const { register, handleSubmit, setValue } = useForm();
 
-  const [file,setFile] = React.useState([])
+  const [file,setFile] = useState([])
+  const fileId = []
 
-  const onSubmit = (data) => {
+  const userData = useSelector((state)=>state.auth.userData)
+
+  const onSubmit = async(data) => {
     console.log('Submitted!!');
     console.log(data);
+
+    if(file && file.length>0){
+      for(const i in file){
+        const files = await service.uploadFile(file[i])
+        fileId.push(files.$id)
+      }
+    }else{
+      console.log('no file selected')
+    }
+
+    await service.createPost(data.content,fileId,userData.$id)
   };
 
   const imgSelecterFn = () => {
@@ -18,11 +34,11 @@ function PostInput() {
 
   const handleFileChange = (e) => {
     if(file.length < 4){
-    const tempFile = e.target.files[Number(e.target.files.length)-1];
-    setFile(prevVal => [...prevVal, URL.createObjectURL(tempFile)])
+    const tempFile = e.target.files[0];
+    setFile(prevVal => [...prevVal, tempFile])
     setValue('image', tempFile);
     console.log(tempFile);
-    inputDiv.current.value = null
+    inputDiv.current.value = ''
     }
   };
 
@@ -60,7 +76,7 @@ function PostInput() {
                     <div className='text-2xl'><span onClick={()=>removeFile(index)}                    
                     className='cursor-pointer hover:text-[#d4d2d270]'><ion-icon name="close"></ion-icon></span>
                     </div>
-                    <img src={url} className='h-full w-[70%] m-auto' />
+                    <img src={URL.createObjectURL(url)} className='h-full w-[70%] m-auto' />
                     </div>
                 ))}
                 </div>}
