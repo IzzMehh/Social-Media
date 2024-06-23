@@ -1,9 +1,28 @@
 import React, { useState } from "react"
 import {Sidebar,Post} from "./components/index"
-import {Outlet} from "react-router-dom"
+import {Outlet, useNavigate} from "react-router-dom"
+import authservice from "./appwrite/Auth"
+import {useDispatch,useSelector} from "react-redux"
+import { logout,login } from "./store/authSlice"
 
 function App() {
     const [isOpen, setIsOpen] = useState(false)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    React.useEffect(()=>{
+        authservice.getCurrentUser()
+        .then((userData)=>{
+            if(userData){
+                dispatch(login({userData}))
+            }
+            else{
+                dispatch(logout())
+                navigate('/login')
+            }
+        })
+    },[navigate])
+
 
     const openPost = () =>{
       setIsOpen(preval => !preval)
