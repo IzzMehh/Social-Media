@@ -1,5 +1,5 @@
 import config from "../envConfig/config";
-import { Client , Databases, Storage ,ID} from "appwrite"; 
+import { Client , Databases, Storage ,ID,Query} from "appwrite"; 
 
 class AppService{
     client = new Client()
@@ -32,6 +32,20 @@ class AppService{
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 postId,
+            )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async getUserPost(userId){
+        try {
+            return await this.database.listDocuments(
+                config.appwriteDatabaseId,
+                config.appwriteCollectionId,
+                [
+                    Query.equal("userId", userId)
+                ]
             )
         } catch (error) {
             console.log(error)
@@ -83,3 +97,6 @@ class AppService{
         )
     }
 }
+
+const service = new AppService()
+export default service

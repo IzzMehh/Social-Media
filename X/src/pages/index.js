@@ -3,6 +3,7 @@ import { AllPosts } from "../components";
 import Login from "./Login";
 import Signup from "./Signup";
 import About from "./About";
+import Profile from "./Profile";
 
 export{
     Home,
@@ -10,4 +11,5 @@ export{
     Login,
     Signup,
     About,
+    Profile,
 }

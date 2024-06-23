@@ -18,15 +18,10 @@ function Signup() {
         if (userData) {
           dispatch(login(userData));
           navigate('/home');
-          console.log(userData);
         }
-      }
-      else{
-        console.log('no data')
       }
     } catch (error) {
       console.error('Signup failed:', error);
-      // Handle error: show error message to the user, etc.
     }
   };
 
