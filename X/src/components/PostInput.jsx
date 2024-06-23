@@ -54,7 +54,7 @@ function PostInput() {
               className='w-full p-2 bg-transparent outline-none focus:border-b'
             ></textarea>
 
-            {(file.length > 0) && <div className={`h-[300px] ${(file.length > 1) ? `grid grid-cols-2 `: '' } ${(file.length > 2) ? `grid-rows-2 `: '' } gap-2`}>
+            {(file.length > 0) && <div className={`h-[300px] ${(file.length > 1) ? `grid grid-cols-2 `: 'grid grid-rows-1' } ${(file.length > 2) ? `grid-rows-2 `: '' } gap-2`}>
                 {file.map((url,index)=>(
                     <div className='flex' key={index}>
                     <div className='text-2xl'><span onClick={()=>removeFile(index)}                    
