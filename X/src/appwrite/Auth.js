@@ -46,7 +46,7 @@ class AuthService {
 
     async logout(){
         try {
-            await account.deleteSession()
+            await this.account.deleteSession('current')
         } catch (error) {
             console.log(error)
         }
