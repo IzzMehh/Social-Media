@@ -25,7 +25,7 @@ function PostInput() {
       console.log('no file selected')
     }
 
-    await service.createPost(data.content,fileId,userData.$id)
+    await service.createPost(data.content,fileId,userData.$id,userData.name)
   };
 
   const imgSelecterFn = () => {

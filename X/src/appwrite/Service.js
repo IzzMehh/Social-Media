@@ -52,17 +52,18 @@ class AppService{
         }
     }
 
-    async createPost(content,image,userId){
+    async createPost(content,image,userId,username){
         try {
             return await this.database.createDocument(
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 ID.unique(),
                 {
-                    'content' : content,
-                    'images': image,
-                    'likes': 0,
-                    userId:userId
+                    content: content,
+                    images: image,
+                    likes: 0,
+                    userId:userId,
+                    username:username,
                 }
             )
         } catch (error) {
@@ -92,7 +93,7 @@ class AppService{
         )
     }
 
-    async getFilePreview(fileId){
+    getFilePreview(fileId){
         return this.bucket.getFilePreview(
             config.appwriteBucketId,
             fileId,

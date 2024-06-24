@@ -10,6 +10,8 @@ function App() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
+    const authStatus = useSelector((state)=>state.auth.loginStatus)
+
     React.useEffect(()=>{
         authservice.getCurrentUser()
         .then((userData)=>{
@@ -21,7 +23,7 @@ function App() {
                 navigate('/login')
             }
         })
-    },[navigate])
+    },[navigate,authStatus])
 
 
     const openPost = () =>{
