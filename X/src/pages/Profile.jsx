@@ -17,7 +17,7 @@ function Profile() {
 
   React.useEffect(()=>{
     service.getUserPost(data.$id).then((userPosts)=>{
-      setUserPosts(userPosts.documents)
+      setUserPosts(userPosts.documents.reverse())
       console.log(userPosts)
     })
   },[])

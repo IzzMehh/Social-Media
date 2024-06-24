@@ -1,34 +1,34 @@
-import React,{useCallback, useRef, useState} from 'react'
-import { AllPosts,PostInput } from '../components/index'
+import React, { useState } from 'react'
+import { AllPosts, Loader, PostInput } from '../components/index'
 import service from '../appwrite/Service'
 
 function Home() {
-    const inputDiv = useRef(null)
+  const [postData, setPostData] = useState([])
+  const [fetchPost, setFetchPost] = useState(true)
 
-    const [postData,setPostData] = useState([])
-    const fn = useCallback((e) =>{
-        e.preventDefault()
-        console.log('sumbited!!')
-        console.log(e)
-    },[])
-    const imgSelecterFn = () =>{
-        inputDiv.current.click()
-    }
-
-    React.useEffect(()=>{
-      service.getAllPost().then((posts)=>{
-        setPostData(posts.documents)
+  React.useEffect(() => {
+    try {
+      service.getAllPost().then((posts) => {
+        setPostData(posts.documents.reverse())
+        setFetchPost(false)
       })
-      
-      console.log(postData)
-    },[])
+    } catch (error) {
+      console.log(error)
+      setFetchPost(true)
+    }
+  }, [fetchPost])
 
   return (
     <>
-    <PostInput/>
-    {postData && postData.map((post)=>(
-    <AllPosts {...post} postId={post.$id} />
-    ))}
+      {fetchPost ?
+        <Loader/> :
+        <>
+          <PostInput fetchPostFn={setFetchPost} />
+          {postData && postData.map((post) => (
+            <AllPosts {...post} postId={post.$id} />
+          ))}
+        </>
+      }
     </>
 
   )
