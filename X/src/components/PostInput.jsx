@@ -3,29 +3,34 @@ import { useForm } from 'react-hook-form';
 import service from '../appwrite/Service';
 import { useSelector } from 'react-redux';
 
-function PostInput() {
+function PostInput({ fetchPostFn }) {
   const inputDiv = useRef(null);
   const { register, handleSubmit, setValue } = useForm();
 
-  const [file,setFile] = useState([])
+  const [uploading, setUploading] = useState(false)
+
+  const [file, setFile] = useState([])
   const fileId = []
 
-  const userData = useSelector((state)=>state.auth.userData)
+  const userData = useSelector((state) => state.auth.userData)
 
-  const onSubmit = async(data) => {
+  const onSubmit = async (data) => {
+    setUploading(true)
     console.log('Submitted!!');
     console.log(data);
 
-    if(file && file.length>0){
-      for(const i in file){
+    if (file && file.length > 0) {
+      for (const i in file) {
         const files = await service.uploadFile(file[i])
         fileId.push(files.$id)
       }
-    }else{
+    } else {
       console.log('no file selected')
     }
 
-    await service.createPost(data.content,fileId,userData.$id,userData.name)
+    await service.createPost(data.content, fileId, userData.$id, userData.name)
+    fetchPostFn(true)
+    setUploading(false)
   };
 
   const imgSelecterFn = () => {
@@ -33,23 +38,23 @@ function PostInput() {
   };
 
   const handleFileChange = (e) => {
-    if(file.length < 4){
-    const tempFile = e.target.files[0];
-    setFile(prevVal => [...prevVal, tempFile])
-    setValue('image', tempFile);
-    console.log(tempFile);
-    inputDiv.current.value = ''
+    if (file.length < 4) {
+      const tempFile = e.target.files[0];
+      setFile(prevVal => [...prevVal, tempFile])
+      setValue('image', tempFile);
+      console.log(tempFile);
+      inputDiv.current.value = ''
     }
   };
 
-  const removeFile = (index) =>{
+  const removeFile = (index) => {
     console.log("index : ", index)
     console.log("file : ", file)
     const arr = [...file]
-    arr.splice(index,1)
+    arr.splice(index, 1)
     setFile([...arr])
     console.log('after file: ', file)
-    console.log('length: ' ,file.length)
+    console.log('length: ', file.length)
   }
 
   return (
@@ -70,17 +75,17 @@ function PostInput() {
               className='w-full p-2 bg-transparent outline-none focus:border-b'
             ></textarea>
 
-            {(file.length > 0) && <div className={`h-[300px] ${(file.length > 1) ? `grid grid-cols-2 `: 'grid grid-rows-1' } ${(file.length > 2) ? `grid-rows-2 `: '' } gap-2`}>
-                {file.map((url,index)=>(
-                    <div className='flex' key={index}>
-                    <div className='text-2xl'><span onClick={()=>removeFile(index)}                    
+            {(file.length > 0) && <div className={`h-[300px] ${(file.length > 1) ? `grid grid-cols-2 ` : 'grid grid-rows-1'} ${(file.length > 2) ? `grid-rows-2 ` : ''} gap-2`}>
+              {file.map((url, index) => (
+                <div className='flex' key={index}>
+                  <div className='text-2xl'><span onClick={() => removeFile(index)}
                     className='cursor-pointer hover:text-[#d4d2d270]'><ion-icon name="close"></ion-icon></span>
-                    </div>
-                    <img src={URL.createObjectURL(url)} className='h-full w-[70%] m-auto' />
-                    </div>
-                ))}
-                </div>}
-            
+                  </div>
+                  <img src={URL.createObjectURL(url)} className='h-full w-[70%] m-auto' />
+                </div>
+              ))}
+            </div>}
+
             <div className='grid grid-cols-[20%,80%]'>
               <div className='relative text-blue-700'>
                 <input
@@ -95,8 +100,19 @@ function PostInput() {
                 </button>
               </div>
               <div className='flex justify-end'>
-                <button type="submit" className='relative right-0 bg-blue-700 py-3 px-10 font-semibold rounded-full'>
-                  Post
+                <button type="submit" className='relative right-0 bg-blue-700 py-4 px-10 font-semibold rounded-full'>
+                  {uploading ?
+                    <>
+                      <div
+                        class="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+                        role="status">
+                        <span
+                          class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                        >Loading... </span>
+                      </div>
+                    </>
+                    :
+                    'Post'}
                 </button>
               </div>
             </div>
