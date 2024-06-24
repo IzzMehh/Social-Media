@@ -1,20 +1,21 @@
 import React from 'react'
 import {Link} from "react-router-dom"
 import service from '../appwrite/Service'
+import moment from 'moment'
 
-function AllPosts({userId,postId,images=[],content,likes,comments,username = 'IzzMehGaurav'}) {
+function AllPosts({postId,images=[],content,likes,comments,username = 'IzzMehGaurav',date="22/12/22"}) {
 
   return (
     <>
 <Link to={`/posts/${postId}`}>
 <div className='w-full hover:bg-[#262626ad] text-white border-y py-1'>
          <div className='w-full flex'>
-            <Link to={`/user/${userId}`} className='h-[50px] rounded-full'>
+            <div className='h-[50px] rounded-full'>
                 <img className='h-full' src="logo.png" alt="" />
-            </Link>
+            </div>
             <div className='w-full'>
                 <div>
-                    {username}
+                    {username} · ({moment(date).format('DD/MM/YY · h:mm A ')})
                 </div>
                 <div className=''>
                   {

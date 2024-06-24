@@ -25,7 +25,7 @@ function Home() {
         <>
           <PostInput fetchPostFn={setFetchPost} />
           {postData && postData.map((post) => (
-            <AllPosts {...post} postId={post.$id} />
+            <AllPosts {...post} postId={post.$id} date={post.$updatedAt}  />
           ))}
         </>
       }
