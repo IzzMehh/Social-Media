@@ -4,30 +4,37 @@ import service from '../appwrite/Service'
 
 function Home() {
   const [postData, setPostData] = useState([])
-  const [fetchPost, setFetchPost] = useState(true)
+  const [profileImgs,setProfileImgs] = useState([])
+  const [fetchPost, setFetchPost] = useState(false)
 
   React.useEffect(() => {
     try {
       service.getAllPost().then((posts) => {
         setPostData(posts.documents.reverse())
-        setFetchPost(false)
+        setFetchPost(true)
+
+        return service.isProfile()
+      }).then((profileImgs)=>{
+        setProfileImgs(profileImgs.files)
       })
     } catch (error) {
       console.log(error)
-      setFetchPost(true)
+      setFetchPost(false)
+      setProfileImgs(false)
     }
   }, [fetchPost])
+  
 
   return (
     <>
       {fetchPost ?
-        <Loader/> :
         <>
-          <PostInput fetchPostFn={setFetchPost} />
+          <PostInput fetchPostFn={setFetchPost}  profileImgs={profileImgs}/>
           {postData && postData.map((post) => (
-            <AllPosts {...post} postId={post.$id} />
-          ))}
-        </>
+            <AllPosts {...post} postId={post.$id} profileImgs={profileImgs} date={post.$updatedAt}  />
+          ))}  
+          </> :
+          <Loader/>
       }
     </>
 

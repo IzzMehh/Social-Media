@@ -40,7 +40,7 @@ function Signup() {
                 <input {...register('name', {
                   required: 'Please Enter the Username',
                   pattern: {
-                    value: /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/igm,
+                    value: /^(?!.*\.\.)(?!.*\.$)[^\W][\w.\s]{0,29}$/igm,
                     message: 'Username must start with an alphanumeric character, not have consecutive dots, and not end with a dot.',
                   },
                 })} placeholder='Enter your username' className='px-3 py-2 outline-none bg-transparent border rounded-lg w-[90%]' type='text' name='name' />
@@ -66,10 +66,6 @@ function Signup() {
                   minLength: {
                     value: 8,
                     message: 'Password must be at least 8 characters',
-                  },
-                  pattern: {
-                    value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm,
-                    message: 'Password must contain at least one digit, one lowercase letter, one uppercase letter, and be at least 8 characters long',
                   },
                 })} placeholder='Enter your password' className='px-3 py-2 outline-none bg-transparent border rounded-lg w-[90%]' type='password' name='password' />
               </div>

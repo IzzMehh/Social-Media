@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {useSelector} from "react-redux"
 import service from '../appwrite/Service'
-import { AllPosts } from '../components'
+import { AllPosts,Loader,Uploading } from '../components/index'
 import { useDispatch } from 'react-redux'
 import {logout} from '../store/authSlice'
 import authservice from '../appwrite/Auth'
@@ -9,17 +9,34 @@ import { useNavigate } from "react-router-dom"
 
 function Profile() {
   const data = useSelector((state)=>state.auth.userData)
+
   console.log(data)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [userPosts,setUserPosts] = useState([])
 
-  React.useEffect(()=>{
+  const [haveProfile, setHaveProfile] = useState(false)
+
+  const inputButton = useRef(null)
+
+  const [loading,setLoding] = useState(true) 
+  const [uploading,setUploading] = useState(false)
+
+  const fetchData = () =>{
     service.getUserPost(data.$id).then((userPosts)=>{
       setUserPosts(userPosts.documents.reverse())
-      console.log(userPosts)
+
+      return service.isProfile()
+    }).then(profileData => {
+      setHaveProfile(profileData.files.some(imgData => imgData.$id === data.$id))
+      setLoding(false)
+      setUploading(false)
     })
+  }
+
+  React.useEffect(()=>{
+    fetchData()
   },[])
 
   const logoutFn = async() =>{
@@ -33,30 +50,50 @@ function Profile() {
     }
   }
 
+
+  const uploadFile = async(e) =>{
+    if(!uploading){
+    setUploading(true)
+    if(haveProfile){
+      await service.deleteProfileImage(data.$id)
+    }
+    await service.uploadProfileImage(data.$id,e.target.files[0])
+    fetchData()
+  }
+}
+
   return (
     <>
-    <div className=' text-white ml-10 pt-20'>
-      <div className='flex'>
-      <div className='w-[100px]'>
-        <img className='rounded-full' src="https://th.bing.com/th/id/OIP.fqSvfYQB0rQ-6EG_oqvonQHaHa?rs=1&pid=ImgDetMain" alt="" />
+    {
+      loading ? <Loader/> :     <>
+      {uploading ? null : <input type="file" ref={inputButton} hidden onChange={uploadFile} />}
+      <div className=' text-white ml-10 pt-20'>
+        <div className='flex'>
+        <div className='w-[80px] relative'>
+          <img className='w-full h-[80px] rounded-full' src={haveProfile ? String(service.getProfileImage(data.$id))+`&mode=admin ${new Date().getTime()}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
+          <button
+          onClick={() => uploading ? null : inputButton.current.click()} 
+          className='w-[100px] h-[45px] border rounded-lg hover:bg-white hover:text-black flex justify-center items-center'>{uploading ? <Uploading/> : 'Change' }</button>
+        </div>
+        <div className='ml-10 mt-5 text-2xl font-content'>
+          <p>{data.name}</p>
+          <p className='text-sm'>{data.email}</p>
+        </div>
+        <div className='ml-10 mt-5'>
+          <button 
+          onClick={logoutFn}
+          className='p-4 border rounded-full hover:bg-white hover:text-black'>Logout</button>
+        </div>
+        </div>
+        <div className='mt-10'>
+          {userPosts && userPosts.map((post)=>(
+          <AllPosts {...post} postId={post.$id} profileImgs={[{$id:data.$id}]} date={post.$updatedAt} />
+          ))}
+          
+        </div>
       </div>
-      <div className='ml-10 mt-5 text-2xl font-content'>
-        <p>{data.name}</p>
-        <p className='text-sm'>{data.email}</p>
-      </div>
-      <div className='ml-10 mt-5'>
-        <button 
-        onClick={logoutFn}
-        className='p-4 border rounded-full hover:bg-white hover:text-black'>Logout</button>
-      </div>
-      </div>
-      <div className='mt-10'>
-        {userPosts && userPosts.map((post)=>(
-        <AllPosts {...post} postId={post.$id} />
-        ))}
-        
-      </div>
-    </div>
+      </>
+    }
     </>
   )
 }
