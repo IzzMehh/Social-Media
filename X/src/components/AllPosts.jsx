@@ -3,7 +3,11 @@ import {Link} from "react-router-dom"
 import service from '../appwrite/Service'
 import moment from 'moment'
 
-function AllPosts({postId,images=[],content,likes,comments,username = 'IzzMehGaurav',date="22/12/22"}) {
+function AllPosts({userId,postId,images=[],profileImgs=[],content,likes,comments,username = 'IzzMehGaurav',date="22/12/22"}) {
+
+  const haveProfile = () =>{
+    return profileImgs.some(imgData => imgData.$id == userId)
+  }
 
   return (
     <>
@@ -11,7 +15,7 @@ function AllPosts({postId,images=[],content,likes,comments,username = 'IzzMehGau
 <div className='w-full hover:bg-[#262626ad] text-white border-y py-1'>
          <div className='w-full flex'>
             <div className='h-[50px] rounded-full'>
-                <img className='h-full' src="logo.png" alt="" />
+                <img className='h-[40px] w-[40px] rounded-full mr-2' src={haveProfile() ? String(service.getProfileImage(userId))+`&mode=admin ${new Date().getTime()}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
             </div>
             <div className='w-full'>
                 <div>

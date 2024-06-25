@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import service from '../appwrite/Service';
 import { useSelector } from 'react-redux';
 
-function PostInput({ fetchPostFn }) {
+function PostInput({ fetchPostFn, profileImgs=[] }) {
   const inputDiv = useRef(null);
   const { register, handleSubmit, setValue } = useForm();
 
@@ -13,6 +13,11 @@ function PostInput({ fetchPostFn }) {
   const fileId = []
 
   const userData = useSelector((state) => state.auth.userData)
+
+  const haveProfile = () =>{
+    console.log(profileImgs)
+    return profileImgs.some(imgData => imgData.$id == userData.$id)
+  }
 
   const onSubmit = async (data) => {
     setUploading(true)
@@ -61,8 +66,8 @@ function PostInput({ fetchPostFn }) {
     <>
       <form onSubmit={handleSubmit(onSubmit)} className="w-full text-white border-y py-1">
         <div className='w-full flex'>
-          <div className='h-[50px] rounded-full'>
-            <img className='h-full' src="logo.png" alt="" />
+          <div>
+            <img className='h-[45px] rounded-full' src={haveProfile() ? String(service.getProfileImage(userData.$id))+`&mode=admin ${new Date().getTime()}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
           </div>
           <div className='w-full relative'>
             <textarea
@@ -75,13 +80,13 @@ function PostInput({ fetchPostFn }) {
               className='w-full p-2 bg-transparent outline-none focus:border-b'
             ></textarea>
 
-            {(file.length > 0) && <div className={`h-[300px] ${(file.length > 1) ? `grid grid-cols-2 ` : 'grid grid-rows-1'} ${(file.length > 2) ? `grid-rows-2 ` : ''} gap-2`}>
+            {(file.length > 0) && <div className={`${(file.length > 1) ? `grid grid-cols-2 ` : 'grid grid-rows-1'} ${(file.length > 2) ? `grid-rows-2 ` : ''} gap-2`}>
               {file.map((url, index) => (
                 <div className='flex' key={index}>
                   <div className='text-2xl'><span onClick={() => removeFile(index)}
                     className='cursor-pointer hover:text-[#d4d2d270]'><ion-icon name="close"></ion-icon></span>
                   </div>
-                  <img src={URL.createObjectURL(url)} className='h-full w-[70%] m-auto' />
+                  <img src={URL.createObjectURL(url)} className='h-[200px] m-auto' />
                 </div>
               ))}
             </div>}

@@ -57,10 +57,8 @@ function Login() {
             value: 8,
             message:"Password must be at least 8 characters",
           },
-          pattern:{
-            value:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm,
-            message:'Password must contain at least one digit, one lowercase letter, one uppercase letter, and be at least 8 characters long'
-          }})} placeholder='Enter your password' className='px-3 py-2 outline-none bg-transparent border rounded-lg w-[90%]' type="password" name="password" />
+        }
+          )} placeholder='Enter your password' className='px-3 py-2 outline-none bg-transparent border rounded-lg w-[90%]' type="password" name="password" />
           </div>
           {errors.password && <p className='text-red-600'>{errors.password.message}</p> }
 

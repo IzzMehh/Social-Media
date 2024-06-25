@@ -5,6 +5,7 @@ class AppService{
     client = new Client()
     database;
     bucket;
+    userProfile; 
 
     constructor(){
         this.client
@@ -13,6 +14,7 @@ class AppService{
 
         this.database = new Databases(this.client)
         this.bucket = new Storage(this.client)
+        this.userProfile = new Storage(this.client)
     }
 
     async getAllPost(){
@@ -92,14 +94,85 @@ class AppService{
             file,
         )
     }
-
+    
     getFilePreview(fileId){
-        return this.bucket.getFilePreview(
-            config.appwriteBucketId,
-            fileId,
-        )
+        try {
+            return this.bucket.getFilePreview(
+                config.appwriteBucketId,
+                fileId,
+            )
+        } catch (error) {
+            console.log(error)
+        }
     }
+
+    async uploadProfileImage(userId,file){
+        try {
+            return await this.userProfile.createFile(
+                config.appwriteUserProfileId,
+                userId,
+                file,
+            )
+        } catch (error) {
+         console.log(error)   
+        }
+    }
+
+    async deleteProfileImage(fileId){
+        try {
+            await this.userProfile.deleteFile(
+                config.appwriteUserProfileId,
+                fileId,
+            )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    getProfileImage(userId){
+        try {
+            const posted = this.userProfile.getFileView(
+                config.appwriteUserProfileId,
+                userId,
+            )
+            console.log('posted ',posted)
+            return posted
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async isProfilePicture(userId){
+        try {
+          const data = this.getProfileImage(userId)
+          const fetchedData = await fetch(data)
+          await fetchedData.json()
+          console.log('not found')
+          return false
+         } catch (error) {
+          console.log(error)
+          console.log('found!!')
+          return true
+         }
+      }
+
+    async isProfile(){
+        try {
+            const data = await this.userProfile.listFiles(
+                config.appwriteUserProfileId,
+            )
+            console.log(data)
+            return data
+        } catch (error) {
+            
+        }
+    }
+    
+
+
 }
+
+            // return 'https://th.bing.com/th/id/OIP.fqSvfYQB0rQ-6EG_oqvonQHaHa?rs=1&pid=ImgDetMain'
 
 const service = new AppService()
 export default service
