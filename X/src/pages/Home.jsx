@@ -27,9 +27,9 @@ function Home() {
 
   return (
     <>
+    <PostInput fetchPostFn={setFetchPost}  profileImgs={profileImgs}/>
       {fetchPost ?
         <>
-          <PostInput fetchPostFn={setFetchPost}  profileImgs={profileImgs}/>
           {postData && postData.map((post) => (
             <AllPosts {...post} postId={post.$id} profileImgs={profileImgs} date={post.$updatedAt}  />
           ))}  

@@ -30,7 +30,7 @@ function PostInput({ fetchPostFn, profileImgs=[] }) {
     }
 
     await service.createPost(data.content, fileId, userData.$id, userData.name)
-    fetchPostFn(true)
+    fetchPostFn(false)
     setUploading(false)
   };
 
