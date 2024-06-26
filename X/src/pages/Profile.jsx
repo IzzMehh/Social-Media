@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom"
 
 function Profile() {
   const data = useSelector((state)=>state.auth)
-  console.log(data)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()

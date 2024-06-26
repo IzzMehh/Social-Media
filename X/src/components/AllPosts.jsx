@@ -35,7 +35,7 @@ function AllPosts({userId,postId,images=[],profileImgs=[],content,likes,comments
                 </div>
                 <div className={`${(images.length > 0) ? 'h-[500px]': 'hidden'}} ${(images.length > 1) ? `grid grid-cols-2 `: 'grid grid-rows-1 ' } ${(images.length > 2) ? `grid-rows-2 `: '' } gap-2`}>
                   {images && images.map((id)=>(
-                    <img className='h-full' src={service.getFilePreview(id)}></img>
+                    <img key={id} className='h-full' src={service.getFilePreview(id)}></img>
                   ))}
                 </div>
                 <div className='flex mt-2'>
@@ -49,11 +49,11 @@ function AllPosts({userId,postId,images=[],profileImgs=[],content,likes,comments
     </div>
     </Link>
 
-    </>
+    </> 
 
     
 
   )
 }
 
-export default AllPosts
+export default (AllPosts)

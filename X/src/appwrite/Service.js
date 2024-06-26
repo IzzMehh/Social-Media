@@ -142,13 +142,11 @@ class AppService{
 
     async isProfile(){
         try {
-            const data = await this.userProfile.listFiles(
+            return await this.userProfile.listFiles(
                 config.appwriteUserProfileId,
             )
-            console.log(data)
-            return data
         } catch (error) {
-            
+            console.log(error)
         }
     }
     
