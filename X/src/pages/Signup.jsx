@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import authservice from '../appwrite/Auth';
 import { login } from '../store/authSlice';
 import { useDispatch } from 'react-redux';
+import {Uploading} from '../components/index';
 
 function Signup() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [uploading,setUploading] = useState(false)
+
   const onSubmit = async (data) => {
+    if(!uploading){
     try {
+      setUploading(true)
       const session = await authservice.createAccount(data);
       if (session) {
         const userData = await authservice.login(data);
@@ -23,6 +28,7 @@ function Signup() {
     } catch (error) {
       console.error('Signup failed:', error);
     }
+  }
   };
 
   return (
@@ -71,7 +77,7 @@ function Signup() {
               </div>
               {errors.password && <p className='text-red-600'>{errors.password.message}</p>}
 
-              <button className='bg-blue-700 w-[90%] py-3 rounded-md mt-3'>Sign Up</button>
+              <button className='bg-blue-700 w-[90%] h-[50px] rounded-md mt-3'>{uploading ? <Uploading/> : 'Sign up'}</button>
               <div className='text-sm mt-2 sm:text-base'>Already have an account? <span className='text-blue-600'>Create an account</span> <Link to='/login' className='text-[#FFA3BE]'>Login</Link></div>
             </form>
           </div>

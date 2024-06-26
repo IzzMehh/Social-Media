@@ -21,16 +21,12 @@ function PostInput({ fetchPostFn, profileImgs=[] }) {
 
   const onSubmit = async (data) => {
     setUploading(true)
-    console.log('Submitted!!');
-    console.log(data);
 
     if (file && file.length > 0) {
       for (const i in file) {
         const files = await service.uploadFile(file[i])
         fileId.push(files.$id)
       }
-    } else {
-      console.log('no file selected')
     }
 
     await service.createPost(data.content, fileId, userData.$id, userData.name)
@@ -53,13 +49,9 @@ function PostInput({ fetchPostFn, profileImgs=[] }) {
   };
 
   const removeFile = (index) => {
-    console.log("index : ", index)
-    console.log("file : ", file)
     const arr = [...file]
     arr.splice(index, 1)
     setFile([...arr])
-    console.log('after file: ', file)
-    console.log('length: ', file.length)
   }
 
   return (

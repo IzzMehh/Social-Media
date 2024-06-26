@@ -3,7 +3,7 @@ import {useForm} from "react-hook-form"
 import {Link, useNavigate} from "react-router-dom"
 import authservice from '../appwrite/Auth'
 import {useDispatch} from "react-redux"
-import { login,logout } from '../store/authSlice'
+import { login} from '../store/authSlice'
 
 function Login() {
   const {register,handleSubmit,formState:{errors}} = useForm()
@@ -20,7 +20,6 @@ function Login() {
         if(userData){
           dispatch(login(userData))
           navigate('/home')
-          console.log(userData)
         }
       }
       

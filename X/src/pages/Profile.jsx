@@ -87,7 +87,7 @@ function Profile() {
         </div>
         <div className='mt-10'>
           {userPosts && userPosts.map((post)=>(
-          <AllPosts {...post} postId={post.$id} profileImgs={[{$id:data.$id}]} date={post.$updatedAt} />
+          <AllPosts {...post} postId={post.$id} profileImgs={haveProfile ?[{$id:data.$id}] : [{$id:0}]} date={post.$updatedAt} />
           ))}
           
         </div>
