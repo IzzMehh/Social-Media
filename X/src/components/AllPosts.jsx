@@ -2,19 +2,40 @@ import React from 'react'
 import {Link} from "react-router-dom"
 import service from '../appwrite/Service'
 import moment from 'moment'
+import { useSelector } from 'react-redux'
 
-function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,likes,comments,username,date,reduxImgId}) {
+function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,likes=[],comments,username,date,reduxImgId}) {
+
+  const currentUserData = useSelector(state => state.auth.userData)
 
   const haveProfile = () =>{
     return profileImgs.some(imgData => imgData.$id == userId)
   }
 
   const totalFiles = Number(images.length + videos.length)
-  console.log(totalFiles)
+
+  const handleLike = async() => {
+    try {
+      if(!likes.includes(userId)){
+        const postData = await service.getPost(postId)
+        const newLikes = postData.likes 
+        newLikes.push(currentUserData.$id)
+        await service.updatePost(postId,newLikes,postData.comments)
+      }else{
+        const postData = await service.getPost(postId)
+        const index = postData.likes.indexOf(currentUserData.$id)
+        const newLikes = postData.likes
+        newLikes.splice(index,1)
+        await service.updatePost(postId,newLikes,postData.comments)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <>
-<Link to={`/posts/${postId}`}>
+<div>
 <div className='w-full hover:bg-[#262626ad] text-white border-y py-1'>
          <div className='w-full flex'>
             <div className='h-[50px] rounded-full'>
@@ -38,13 +59,15 @@ function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,like
                 <div className='flex mt-2'>
                 <div className='text-xl cursor-pointer mr-1'><ion-icon name="chatbox-ellipses-outline"></ion-icon></div>
                 <span className='mr-5'>{comments.length}</span>
-                <Link to={'/home'} className='text-xl cursor-pointer mr-1'><ion-icon name="heart-outline"></ion-icon></Link>
-                <span className=''>{likes}</span>
+                <div
+                onClick={handleLike}  
+                className={`text-xl cursor-pointer mr-1 ${likes.includes(currentUserData.$id) ? 'text-red' : ''}`}><ion-icon name={likes.includes(currentUserData.$id) ? 'heart' : 'heart-outline'}></ion-icon></div>
+                <span className=''>{likes.length}</span>
                 </div>
             </div>
          </div>
     </div>
-    </Link>
+    </div>
 
     </> 
 

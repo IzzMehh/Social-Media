@@ -3,21 +3,18 @@ import {useSelector} from "react-redux"
 import service from '../appwrite/Service'
 import { AllPosts,Loader,Uploading } from '../components/index'
 import { useDispatch } from 'react-redux'
-import {logout} from '../store/authSlice'
+import {logout, regenerateId} from '../store/authSlice'
 import authservice from '../appwrite/Auth'
 import { useNavigate } from "react-router-dom"
 
 function Profile() {
   const data = useSelector((state)=>state.auth)
-
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
   const [userPosts,setUserPosts] = useState([])
-
   const [haveProfile, setHaveProfile] = useState(false)
-
   const inputButton = useRef(null)
-
   const [loading,setLoding] = useState(true) 
   const [uploading,setUploading] = useState(false)
 
@@ -30,6 +27,7 @@ function Profile() {
       setHaveProfile(profileData.files.some(imgData => imgData.$id === data.userData.$id))
       setLoding(false)
       setUploading(false)
+      dispatch(regenerateId())
     })
   }
 

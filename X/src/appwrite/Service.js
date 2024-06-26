@@ -64,7 +64,7 @@ class AppService{
                     content: content,
                     images: images,
                     videos:videos,
-                    likes: 0,
+                    likes: [],
                     userId:userId,
                     username:username,
                 }
@@ -73,6 +73,26 @@ class AppService{
             console.log(error)
         }
     }
+
+    async updatePost(postId,likes,comments){
+        try {
+            // const currentData = await this.getPost(postId)
+            return await this.database.updateDocument(
+                config.appwriteDatabaseId,
+                config.appwriteCollectionId,
+                postId,
+                {
+                    // ...currentData,
+                    likes: likes,
+                    comments:comments,
+                }
+            )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
 
     async deletePost(postId){
         try {
