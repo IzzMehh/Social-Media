@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import service from '../appwrite/Service';
 import { useSelector } from 'react-redux';
 
-function PostInput({ fetchPostFn, profileImgs=[] }) {
+function PostInput({ fetchPostFn, profileImgs=[], reduxImgId }) {
   const inputDiv = useRef(null);
   const { register, handleSubmit, setValue } = useForm();
 
@@ -59,7 +59,7 @@ function PostInput({ fetchPostFn, profileImgs=[] }) {
       <form onSubmit={handleSubmit(onSubmit)} className="w-full text-white border-y py-1">
         <div className='w-full flex'>
           <div>
-            <img className='h-[45px] rounded-full' src={haveProfile() ? String(service.getProfileImage(userData.$id))+`&mode=admin ${new Date().getTime()}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
+            <img className='h-[45px] rounded-full' src={haveProfile() ? String(service.getProfileImage(userData.$id))+`&${reduxImgId}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
           </div>
           <div className='w-full relative'>
             <textarea

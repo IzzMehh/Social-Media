@@ -8,8 +8,7 @@ import authservice from '../appwrite/Auth'
 import { useNavigate } from "react-router-dom"
 
 function Profile() {
-  const data = useSelector((state)=>state.auth.userData)
-
+  const data = useSelector((state)=>state.auth)
   console.log(data)
 
   const dispatch = useDispatch()
@@ -24,12 +23,12 @@ function Profile() {
   const [uploading,setUploading] = useState(false)
 
   const fetchData = () =>{
-    service.getUserPost(data.$id).then((userPosts)=>{
+    service.getUserPost(data.userData.$id).then((userPosts)=>{
       setUserPosts(userPosts.documents.reverse())
 
       return service.isProfile()
     }).then(profileData => {
-      setHaveProfile(profileData.files.some(imgData => imgData.$id === data.$id))
+      setHaveProfile(profileData.files.some(imgData => imgData.$id === data.userData.$id))
       setLoding(false)
       setUploading(false)
     })
@@ -55,9 +54,9 @@ function Profile() {
     if(!uploading){
     setUploading(true)
     if(haveProfile){
-      await service.deleteProfileImage(data.$id)
+      await service.deleteProfileImage(data.userData.$id)
     }
-    await service.uploadProfileImage(data.$id,e.target.files[0])
+    await service.uploadProfileImage(data.userData.$id,e.target.files[0])
     fetchData()
   }
 }
@@ -70,14 +69,14 @@ function Profile() {
       <div className=' text-white ml-10 pt-20'>
         <div className='flex'>
         <div className='w-[80px] relative'>
-          <img className='w-full h-[80px] rounded-full' src={haveProfile ? String(service.getProfileImage(data.$id))+`&mode=admin ${new Date().getTime()}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
+          <img className='w-full h-[80px] rounded-full' src={haveProfile ? String(service.getProfileImage(data.userData.$id))+`&${data.id}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
           <button
           onClick={() => uploading ? null : inputButton.current.click()} 
           className='w-[100px] h-[45px] border rounded-lg hover:bg-white hover:text-black flex justify-center items-center'>{uploading ? <Uploading/> : 'Change' }</button>
         </div>
         <div className='ml-10 mt-5 text-2xl font-content'>
-          <p>{data.name}</p>
-          <p className='text-sm'>{data.email}</p>
+          <p>{data.userData.name}</p>
+          <p className='text-sm'>{data.userData.email}</p>
         </div>
         <div className='ml-10 mt-5'>
           <button 
@@ -87,7 +86,7 @@ function Profile() {
         </div>
         <div className='mt-10'>
           {userPosts && userPosts.map((post)=>(
-          <AllPosts {...post} postId={post.$id} profileImgs={haveProfile ?[{$id:data.$id}] : [{$id:0}]} date={post.$updatedAt} />
+          <AllPosts {...post} postId={post.$id} profileImgs={haveProfile ?[{$id:data.userData.$id}] : [{$id:0}]} reduxImgId={data.id} date={post.$updatedAt} />
           ))}
           
         </div>
