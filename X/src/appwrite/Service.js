@@ -54,7 +54,7 @@ class AppService{
         }
     }
 
-    async createPost(content,image,userId,username){
+    async createPost(content,images,videos,userId,username){
         try {
             return await this.database.createDocument(
                 config.appwriteDatabaseId,
@@ -62,7 +62,8 @@ class AppService{
                 ID.unique(),
                 {
                     content: content,
-                    images: image,
+                    images: images,
+                    videos:videos,
                     likes: 0,
                     userId:userId,
                     username:username,
@@ -97,7 +98,7 @@ class AppService{
     
     getFilePreview(fileId){
         try {
-            return this.bucket.getFilePreview(
+            return this.bucket.getFileView(
                 config.appwriteBucketId,
                 fileId,
             )
@@ -131,40 +132,22 @@ class AppService{
 
     getProfileImage(userId){
         try {
-            const posted = this.userProfile.getFileView(
+            return this.userProfile.getFileView(
                 config.appwriteUserProfileId,
                 userId,
             )
-            console.log('posted ',posted)
-            return posted
         } catch (error) {
             console.log(error)
         }
     }
 
-    async isProfilePicture(userId){
-        try {
-          const data = this.getProfileImage(userId)
-          const fetchedData = await fetch(data)
-          await fetchedData.json()
-          console.log('not found')
-          return false
-         } catch (error) {
-          console.log(error)
-          console.log('found!!')
-          return true
-         }
-      }
-
     async isProfile(){
         try {
-            const data = await this.userProfile.listFiles(
+            return await this.userProfile.listFiles(
                 config.appwriteUserProfileId,
             )
-            console.log(data)
-            return data
         } catch (error) {
-            
+            console.log(error)
         }
     }
     

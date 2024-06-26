@@ -3,11 +3,14 @@ import {Link} from "react-router-dom"
 import service from '../appwrite/Service'
 import moment from 'moment'
 
-function AllPosts({userId,postId,images=[],profileImgs=[],content,likes,comments,username = 'IzzMehGaurav',date="22/12/22",reduxImgId}) {
+function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,likes,comments,username,date,reduxImgId}) {
 
   const haveProfile = () =>{
     return profileImgs.some(imgData => imgData.$id == userId)
   }
+
+  const totalFiles = Number(images.length + videos.length)
+  console.log(totalFiles)
 
   return (
     <>
@@ -22,20 +25,14 @@ function AllPosts({userId,postId,images=[],profileImgs=[],content,likes,comments
                     {username} · ({moment(date).format('DD/MM/YY · h:mm A ')})
                 </div>
                 <div className=''>
-                  {
-                    content || `                Hot take. (Could be wrong)
-
-                    Coding labs are awesome but as a beginner, struggle. 
-                    
-                    Struggle to setup and install those software. Those crying nights to install MySQL or Android are worth it. Your life will be little less scary in production. Setting up environment will teach you a lot. You can spin github workspace anytime but you don’t want to be dependent on it forever, wondering it was magical. 
-                    
-                    If you disagree with this, to Mirzapur ka trailer kaisa laga? 😂`
-                  
-                  }
+                  {content}
                 </div>
-                <div className={`${(images.length > 0) ? 'h-[500px]': 'hidden'}} ${(images.length > 1) ? `grid grid-cols-2 `: 'grid grid-rows-1 ' } ${(images.length > 2) ? `grid-rows-2 `: '' } gap-2`}>
+                <div className={`${(totalFiles.length > 0) ? 'h-[500px]': 'hidden'}s ${(totalFiles.length > 1) ? `grid grid-cols-2 `: 'grid grid-rows-1 grid-cols-2' } ${(totalFiles.length > 2) ? `grid grid-cols-2 grid-rows-2 `: '' } gap-2`}>
                   {images && images.map((id)=>(
-                    <img className='h-full' src={service.getFilePreview(id)}></img>
+                    <img key={id} className='h-[250px]' src={service.getFilePreview(id)}></img>
+                  ))}
+                  {videos && videos.map((id)=>(
+                    <video controls key={id} className='h-[250px]' src={service.getFilePreview(id)}></video>
                   ))}
                 </div>
                 <div className='flex mt-2'>
@@ -49,11 +46,11 @@ function AllPosts({userId,postId,images=[],profileImgs=[],content,likes,comments
     </div>
     </Link>
 
-    </>
+    </> 
 
     
 
   )
 }
 
-export default AllPosts
+export default (AllPosts)

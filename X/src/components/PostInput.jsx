@@ -3,19 +3,20 @@ import { useForm } from 'react-hook-form';
 import service from '../appwrite/Service';
 import { useSelector } from 'react-redux';
 
-function PostInput({ fetchPostFn, profileImgs=[], reduxImgId }) {
+function PostInput({ fetchPostFn, profileImgs = [], reduxImgId }) {
   const inputDiv = useRef(null);
   const { register, handleSubmit, setValue } = useForm();
 
   const [uploading, setUploading] = useState(false)
 
   const [file, setFile] = useState([])
+
   const fileId = []
+  const videoId =[]
 
   const userData = useSelector((state) => state.auth.userData)
 
-  const haveProfile = () =>{
-    console.log(profileImgs)
+  const haveProfile = () => {
     return profileImgs.some(imgData => imgData.$id == userData.$id)
   }
 
@@ -24,12 +25,17 @@ function PostInput({ fetchPostFn, profileImgs=[], reduxImgId }) {
 
     if (file && file.length > 0) {
       for (const i in file) {
-        const files = await service.uploadFile(file[i])
-        fileId.push(files.$id)
+        if(file[i].type === 'video/mp4'){
+        const videos = await service.uploadFile(file[i])
+        videoId.push(videos.$id) 
+        }else{
+        const images = await service.uploadFile(file[i])
+        fileId.push(images.$id)
+        }
       }
     }
 
-    await service.createPost(data.content, fileId, userData.$id, userData.name)
+    await service.createPost(data.content, fileId,videoId, userData.$id, userData.name)
     fetchPostFn(false)
     setUploading(false)
   };
@@ -41,10 +47,13 @@ function PostInput({ fetchPostFn, profileImgs=[], reduxImgId }) {
   const handleFileChange = (e) => {
     if (file.length < 4) {
       const tempFile = e.target.files[0];
+      const allowedTypes = ["image/png", "image/jpg", "image/jpeg", "image/gif", "video/mp4"]
+      if(allowedTypes.includes(tempFile.type)){
       setFile(prevVal => [...prevVal, tempFile])
       setValue('image', tempFile);
-      console.log(tempFile);
       inputDiv.current.value = ''
+      console.log(tempFile)
+      }
     }
   };
 
@@ -59,11 +68,13 @@ function PostInput({ fetchPostFn, profileImgs=[], reduxImgId }) {
       <form onSubmit={handleSubmit(onSubmit)} className="w-full text-white border-y py-1">
         <div className='w-full flex'>
           <div>
-            <img className='h-[45px] rounded-full' src={haveProfile() ? String(service.getProfileImage(userData.$id))+`&${reduxImgId}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
+            <img className='h-[45px] rounded-full' src={haveProfile() ? String(service.getProfileImage(userData.$id)) + `&${reduxImgId}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
           </div>
           <div className='w-full relative'>
             <textarea
-              {...register('content')}
+              {...register('content',{
+                required:true
+              })}
               rows={5}
               maxLength={300}
               name="content"
@@ -73,21 +84,33 @@ function PostInput({ fetchPostFn, profileImgs=[], reduxImgId }) {
             ></textarea>
 
             {(file.length > 0) && <div className={`${(file.length > 1) ? `grid grid-cols-2 ` : 'grid grid-rows-1'} ${(file.length > 2) ? `grid-rows-2 ` : ''} gap-2`}>
-              {file.map((url, index) => (
-                <div className='flex' key={index}>
-                  <div className='text-2xl'><span onClick={() => removeFile(index)}
-                    className='cursor-pointer hover:text-[#d4d2d270]'><ion-icon name="close"></ion-icon></span>
+              {file.map((url, index) => {
+                if (url.type === "video/mp4") {
+                  return (
+                    <div className='flex' key={index}>
+                      <div className='text-2xl'><span onClick={() => removeFile(index)}
+                        className='cursor-pointer hover:text-[#d4d2d270]'><ion-icon name="close"></ion-icon></span>
+                      </div>
+                      <video controls src={URL.createObjectURL(url)} className='h-[200px] m-auto' />
+                    </div>
+                  )
+                }
+                return (
+                  <div className='flex' key={index}>
+                    <div className='text-2xl'><span onClick={() => removeFile(index)}
+                      className='cursor-pointer hover:text-[#d4d2d270]'><ion-icon name="close"></ion-icon></span>
+                    </div>
+                    <img src={URL.createObjectURL(url)} className='h-[200px] m-auto' />
                   </div>
-                  <img src={URL.createObjectURL(url)} className='h-[200px] m-auto' />
-                </div>
-              ))}
+                )
+              })}
             </div>}
 
             <div className='grid grid-cols-[20%,80%]'>
               <div className='relative text-blue-700'>
                 <input
                   type="file"
-                  accept="image/png, image/jpg, image/jpeg, image/gif"
+                  accept="image/png, image/jpg, image/jpeg, image/gif, video/mp4"
                   ref={inputDiv}
                   hidden
                   onChange={handleFileChange}
