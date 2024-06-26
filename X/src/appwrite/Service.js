@@ -131,30 +131,14 @@ class AppService{
 
     getProfileImage(userId){
         try {
-            const posted = this.userProfile.getFileView(
+            return this.userProfile.getFileView(
                 config.appwriteUserProfileId,
                 userId,
             )
-            console.log('posted ',posted)
-            return posted
         } catch (error) {
             console.log(error)
         }
     }
-
-    async isProfilePicture(userId){
-        try {
-          const data = this.getProfileImage(userId)
-          const fetchedData = await fetch(data)
-          await fetchedData.json()
-          console.log('not found')
-          return false
-         } catch (error) {
-          console.log(error)
-          console.log('found!!')
-          return true
-         }
-      }
 
     async isProfile(){
         try {

@@ -15,7 +15,6 @@ function PostInput({ fetchPostFn, profileImgs=[], reduxImgId }) {
   const userData = useSelector((state) => state.auth.userData)
 
   const haveProfile = () =>{
-    console.log(profileImgs)
     return profileImgs.some(imgData => imgData.$id == userData.$id)
   }
 
@@ -43,8 +42,8 @@ function PostInput({ fetchPostFn, profileImgs=[], reduxImgId }) {
       const tempFile = e.target.files[0];
       setFile(prevVal => [...prevVal, tempFile])
       setValue('image', tempFile);
-      console.log(tempFile);
       inputDiv.current.value = ''
+      console.log(e.target.files[0])
     }
   };
 
