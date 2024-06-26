@@ -32,7 +32,6 @@ function App() {
 
     const openPost = () => {
         setIsOpen(preval => !preval)
-        console.log(isOpen)
     }
     return (
         <>

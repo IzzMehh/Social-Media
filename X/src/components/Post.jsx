@@ -9,7 +9,6 @@ function Post({isOpen,fn}) {
 
   React.useEffect(()=>{
     (isOpen===true) ? dialogRef.current.showModal() : dialogRef.current.close()
-    console.log('post!!!')
   },[isOpen])
   
   const submit = (e) =>{
