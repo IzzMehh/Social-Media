@@ -33,7 +33,7 @@ function Home() {
       {fetchPost ?
         <>
           {postData && postData.map((post) => (
-            <AllPosts {...post} postId={post.$id} reduxImgId={reduxData.id} profileImgs={profileImgs} date={post.$updatedAt}  />
+            <AllPosts key={post.$id} {...post} postId={post.$id} reduxImgId={reduxData.id} profileImgs={profileImgs} date={post.$updatedAt}  />
           ))}  
           </> :
           <Loader/>

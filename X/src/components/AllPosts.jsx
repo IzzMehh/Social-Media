@@ -3,11 +3,14 @@ import {Link} from "react-router-dom"
 import service from '../appwrite/Service'
 import moment from 'moment'
 
-function AllPosts({userId,postId,images=[],profileImgs=[],content,likes,comments,username = 'IzzMehGaurav',date="22/12/22",reduxImgId}) {
+function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,likes,comments,username = 'IzzMehGaurav',date="22/12/22",reduxImgId}) {
 
   const haveProfile = () =>{
     return profileImgs.some(imgData => imgData.$id == userId)
   }
+
+  const totalFiles = Number(images.length + videos.length)
+  console.log(totalFiles)
 
   return (
     <>
@@ -33,9 +36,12 @@ function AllPosts({userId,postId,images=[],profileImgs=[],content,likes,comments
                   
                   }
                 </div>
-                <div className={`${(images.length > 0) ? 'h-[500px]': 'hidden'}} ${(images.length > 1) ? `grid grid-cols-2 `: 'grid grid-rows-1 ' } ${(images.length > 2) ? `grid-rows-2 `: '' } gap-2`}>
+                <div className={`${(totalFiles.length > 0) ? 'h-[500px]': 'hidden'}s ${(totalFiles.length > 1) ? `grid grid-cols-2 `: 'grid grid-rows-1 grid-cols-2' } ${(totalFiles.length > 2) ? `grid grid-cols-2 grid-rows-2 `: '' } gap-2`}>
                   {images && images.map((id)=>(
-                    <img key={id} className='h-full' src={service.getFilePreview(id)}></img>
+                    <img key={id} className='h-[250px]' src={service.getFilePreview(id)}></img>
+                  ))}
+                  {videos && videos.map((id)=>(
+                    <video controls key={id} className='h-[250px]' src={service.getFilePreview(id)}></video>
                   ))}
                 </div>
                 <div className='flex mt-2'>

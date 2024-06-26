@@ -54,7 +54,7 @@ class AppService{
         }
     }
 
-    async createPost(content,image,userId,username){
+    async createPost(content,images,videos,userId,username){
         try {
             return await this.database.createDocument(
                 config.appwriteDatabaseId,
@@ -62,7 +62,8 @@ class AppService{
                 ID.unique(),
                 {
                     content: content,
-                    images: image,
+                    images: images,
+                    videos:videos,
                     likes: 0,
                     userId:userId,
                     username:username,
@@ -97,7 +98,7 @@ class AppService{
     
     getFilePreview(fileId){
         try {
-            return this.bucket.getFilePreview(
+            return this.bucket.getFileView(
                 config.appwriteBucketId,
                 fileId,
             )
