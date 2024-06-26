@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { AllPosts, Loader, PostInput } from '../components/index'
 import service from '../appwrite/Service'
+import { useSelector } from 'react-redux'
 
 function Home() {
   const [postData, setPostData] = useState([])
   const [profileImgs,setProfileImgs] = useState([])
   const [fetchPost, setFetchPost] = useState(false)
+  const reduxData = useSelector(state => state.auth)
 
   React.useEffect(() => {
     try {
@@ -27,11 +29,11 @@ function Home() {
 
   return (
     <>
+    <PostInput fetchPostFn={setFetchPost} reduxImgId={reduxData.id}  profileImgs={profileImgs}/>
       {fetchPost ?
         <>
-          <PostInput fetchPostFn={setFetchPost}  profileImgs={profileImgs}/>
           {postData && postData.map((post) => (
-            <AllPosts {...post} postId={post.$id} profileImgs={profileImgs} date={post.$updatedAt}  />
+            <AllPosts {...post} postId={post.$id} reduxImgId={reduxData.id} profileImgs={profileImgs} date={post.$updatedAt}  />
           ))}  
           </> :
           <Loader/>

@@ -1,8 +1,10 @@
 import {createSlice} from "@reduxjs/toolkit"
+import randomId from "../hooks/randomId.js"
 
 const initialState = {
     loginStatus: false,
     userData: null,
+    id:randomId(),
 }
 
 const authSlice = createSlice({
@@ -17,9 +19,12 @@ const authSlice = createSlice({
             state.loginStatus = false
             state.userData = null
         },
+        regenerateId:(state)=>{
+            state.id = randomId()
+        }
     }
 })
 
-export const {login, logout} = authSlice.actions
+export const {login, logout, regenerateId} = authSlice.actions
 
 export default authSlice.reducer
