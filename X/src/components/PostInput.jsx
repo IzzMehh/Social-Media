@@ -72,7 +72,9 @@ function PostInput({ fetchPostFn, profileImgs = [], reduxImgId }) {
           </div>
           <div className='w-full relative'>
             <textarea
-              {...register('content')}
+              {...register('content',{
+                required:true
+              })}
               rows={5}
               maxLength={300}
               name="content"
