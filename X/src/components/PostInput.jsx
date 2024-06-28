@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import service from '../appwrite/Service';
 import { useSelector } from 'react-redux';
 
-function PostInput({ fetchPostFn, profileImgs = [], reduxImgId }) {
+function PostInput({ fetchPostFn, profileImgs = [], commentInput=false,postId=0, reduxImgId }) {
   const inputDiv = useRef(null);
   const { register, handleSubmit, setValue } = useForm();
 
@@ -17,10 +17,10 @@ function PostInput({ fetchPostFn, profileImgs = [], reduxImgId }) {
   const userData = useSelector((state) => state.auth.userData)
 
   const haveProfile = () => {
-    return profileImgs.some(imgData => imgData.$id == userData.$id)
+    return profileImgs.some(imgData => imgData.$id === userData.$id)
   }
 
-  const onSubmit = async (data) => {
+  const createPost = async (data) => {
     setUploading(true)
 
     if (file && file.length > 0) {
@@ -63,12 +63,21 @@ function PostInput({ fetchPostFn, profileImgs = [], reduxImgId }) {
     setFile([...arr])
   }
 
+  const createComment = async(data) =>{
+    try {
+      await service.createComment(userData.$id,postId,userData.name,data.content)
+      window.location.reload()
+    } catch (error) {
+      console.log(error)  
+    }
+  }
+
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full text-white border-y py-1">
+      <form onSubmit={handleSubmit(commentInput ? createComment : createPost)} className="w-full text-white border-y py-1">
         <div className='w-full flex'>
           <div>
-            <img className='h-[45px] rounded-full' src={haveProfile() ? String(service.getProfileImage(userData.$id)) + `&${reduxImgId}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
+            <img className='h-[40px] w-[40px] rounded-full' src={haveProfile() ? String(service.getProfileImage(userData.$id)) + `&${reduxImgId}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
           </div>
           <div className='w-full relative'>
             <textarea
@@ -83,6 +92,8 @@ function PostInput({ fetchPostFn, profileImgs = [], reduxImgId }) {
               className='w-full p-2 bg-transparent outline-none focus:border-b'
             ></textarea>
 
+            {commentInput ? null
+            : <>
             {(file.length > 0) && <div className={`${(file.length > 1) ? `grid grid-cols-2 ` : 'grid grid-rows-1'} ${(file.length > 2) ? `grid-rows-2 ` : ''} gap-2`}>
               {file.map((url, index) => {
                 if (url.type === "video/mp4") {
@@ -105,20 +116,24 @@ function PostInput({ fetchPostFn, profileImgs = [], reduxImgId }) {
                 )
               })}
             </div>}
+            </> }
 
-            <div className='grid grid-cols-[20%,80%]'>
-              <div className='relative text-blue-700'>
-                <input
-                  type="file"
-                  accept="image/png, image/jpg, image/jpeg, image/gif, video/mp4"
-                  ref={inputDiv}
-                  hidden
-                  onChange={handleFileChange}
-                />
-                <button type='button' onClick={imgSelecterFn} className='w-10 h-7 hover:bg-[#1d1d1d]'>
-                  <ion-icon name="image-outline"></ion-icon>
-                </button>
-              </div>
+            <div className={`flex w-full ${commentInput ? 'justify-end' : 'justify-between'}`}>
+              {commentInput 
+              ? null
+              : <div className='relative text-blue-700'>
+              <input
+                type="file"
+                accept="image/png, image/jpg, image/jpeg, image/gif, video/mp4"
+                ref={inputDiv}
+                hidden
+                onChange={handleFileChange}
+              />
+              <button type='button' onClick={imgSelecterFn} className='w-10 h-7 hover:bg-[#1d1d1d]'>
+                <ion-icon name="image-outline"></ion-icon>
+              </button>
+            </div> }
+            
               <div className='flex justify-end'>
                 <button type="submit" className='relative right-0 bg-blue-700 py-4 px-10 font-semibold rounded-full'>
                   {uploading ?

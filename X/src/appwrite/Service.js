@@ -64,7 +64,7 @@ class AppService{
                     content: content,
                     images: images,
                     videos:videos,
-                    likes: 0,
+                    likes: [],
                     userId:userId,
                     username:username,
                 }
@@ -73,6 +73,24 @@ class AppService{
             console.log(error)
         }
     }
+
+    async updatePost(postId,likes,comments){
+        try {
+            return await this.database.updateDocument(
+                config.appwriteDatabaseId,
+                config.appwriteCollectionId,
+                postId,
+                {
+                    likes: likes,
+                    comments:comments,
+                }
+            )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
 
     async deletePost(postId){
         try {
@@ -86,6 +104,51 @@ class AppService{
             console.log(error)
         }
         return false
+    }
+
+    async createComment(userId,postId,username,content){
+        try {
+            return await this.database.createDocument(
+                config.appwriteDatabaseId,
+                config.appwriteCommentCollectionId,
+                ID.unique(),
+                {
+                    userId:userId,
+                    postId:postId,
+                    username:username,
+                    content: content,
+                }
+            )
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async deleteComment(postId){
+        try {
+            await this.database.deleteDocument(
+                config.appwriteDatabaseId,
+                config.appwriteCommentCollectionId,
+                postId,
+            )
+            return true
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async getAllComment(postId){
+        try {
+            return await this.database.listDocuments(
+                config.appwriteDatabaseId,
+                config.appwriteCommentCollectionId,
+                [
+                    Query.equal("postId",[postId])
+                ]
+            )
+        } catch (error) {
+            
+        }
     }
 
     async uploadFile(file){

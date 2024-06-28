@@ -4,6 +4,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import About from "./About";
 import Profile from "./Profile";
+import Post from "./Post";
 
 export{
     Home,
@@ -12,4 +13,5 @@ export{
     Signup,
     About,
     Profile,
+    Post,
 }
