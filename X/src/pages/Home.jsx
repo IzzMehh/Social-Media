@@ -29,7 +29,7 @@ function Home() {
 
   return (
     <>
-    <PostInput fetchPostFn={setFetchPost} reduxImgId={reduxData.id}  profileImgs={profileImgs}/>
+    <PostInput fetchPostFn={setFetchPost} reduxImgId={reduxData.id} profileImgs={profileImgs}/>
       {fetchPost ?
         <>
           {postData && postData.map((post) => (

@@ -4,6 +4,7 @@ import Post from "./Post";
 import PostInput from "./PostInput";
 import Loader from "./Loader";
 import Uploading from "./FetchingLoader.jsx";
+import CommentSection from "./CommentSection.jsx";
 
 export {
     Sidebar,
@@ -12,4 +13,5 @@ export {
     PostInput,
     Loader,
     Uploading,
+    CommentSection,
 }
