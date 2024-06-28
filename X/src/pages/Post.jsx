@@ -12,6 +12,7 @@ function Post() {
     const [error,setError] = useState(null)
     const [data,setData] = useState(null)
     const [fetchingData,setFetchingData] = useState(true)
+    const [updateComments,setUpdateComments] = useState(false)
     const [commentsData,setCommentData] = useState([])
     const [profileImgs,setProfileImgs] = useState([])
     
@@ -30,6 +31,7 @@ function Post() {
                             setError(null)
                             setProfileImgs(images.files)
                             setFetchingData(false)
+                            setUpdateComments(false)
                         }
                     }
                 }else{
@@ -39,15 +41,15 @@ function Post() {
             }
         }
         getPostData()
-    },[])
+    },[fetchingData,updateComments])
   return (
     <>
     {fetchingData ? 
     <div className='text-white'>{error} </div>
      : <> 
      <AllPosts {...data} reduxImgId={reduxData.id} profileImgs={profileImgs} postId={postId} />
-     <PostInput commentInput={true} reduxImgId={reduxData.id} postId={postId} profileImgs={profileImgs}/>
-     {commentsData && commentsData.map((commentData)=>(
+     <PostInput commentInput={true} reduxImgId={reduxData.id} postId={postId} fetchData={setUpdateComments} profileImgs={profileImgs}/>
+     {updateComments ? null :  commentsData.map((commentData)=>(
          <CommentSection key={commentData.$id} profileImgs={profileImgs} reduxImgId={reduxData.id} {...commentData} />
      ))}
      </>

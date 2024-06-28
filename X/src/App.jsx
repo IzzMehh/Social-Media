@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Sidebar, Post } from "./components/index"
+import { Sidebar } from "./components/index"
 import { Outlet, useNavigate } from "react-router-dom"
 import authservice from "./appwrite/Auth"
 import { useDispatch, useSelector } from "react-redux"
@@ -7,7 +7,6 @@ import { logout, login } from "./store/authSlice"
 import {Loader} from "./components/index"
 
 function App() {
-    const [isOpen, setIsOpen] = useState(false)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -29,16 +28,11 @@ function App() {
             })
     }, [navigate, authStatus])
 
-
-    const openPost = () => {
-        setIsOpen(preval => !preval)
-    }
     return (
         <>
             <div className="bg-red grid h-full grid-cols-[20%,70%]">
-                <Post isOpen={isOpen} fn={openPost} />
                 <div>
-                    <Sidebar fn={openPost} />
+                    <Sidebar/>
                 </div>
                 <div className="overflow-y-auto px-2">
                     {isLogged ? <Outlet /> : <Loader/>}

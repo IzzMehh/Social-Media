@@ -74,7 +74,7 @@ class AppService{
         }
     }
 
-    async updatePost(postId,likes,comments){
+    async updatePostLikes(postId,likes,comments){
         try {
             return await this.database.updateDocument(
                 config.appwriteDatabaseId,
@@ -82,6 +82,21 @@ class AppService{
                 postId,
                 {
                     likes: likes,
+                    comments:comments,
+                }
+            )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async updatePostComments(postId,comments){
+        try {
+            return await this.database.updateDocument(
+                config.appwriteDatabaseId,
+                config.appwriteCollectionId,
+                postId,
+                {
                     comments:comments,
                 }
             )

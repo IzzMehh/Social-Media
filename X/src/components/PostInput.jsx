@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import service from '../appwrite/Service';
 import { useSelector } from 'react-redux';
 
-function PostInput({ fetchPostFn, profileImgs = [], commentInput=false,postId=0, reduxImgId }) {
+function PostInput({ fetchPostFn, profileImgs = [], commentInput=false,postId=0, fetchData=null, reduxImgId }) {
   const inputDiv = useRef(null);
   const { register, handleSubmit, setValue } = useForm();
 
@@ -65,10 +65,14 @@ function PostInput({ fetchPostFn, profileImgs = [], commentInput=false,postId=0,
 
   const createComment = async(data) =>{
     try {
+      setUploading(true)
       await service.createComment(userData.$id,postId,userData.name,data.content)
-      window.location.reload()
+      const getPostData = await service.getPost(postId) 
+      await service.updatePostComments(postId,[...getPostData.comments,userData.$id])
+      fetchData(true)
+      setUploading(false)
     } catch (error) {
-      console.log(error)  
+      console.log(error)
     }
   }
 

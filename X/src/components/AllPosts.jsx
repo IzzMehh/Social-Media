@@ -8,12 +8,12 @@ function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,like
   const currentUserData = useSelector(state => state.auth.userData)
   console.log(likes)
   const [likesData,setLikesData] = useState(likes)
-  const [commentsData,setCommentsData] = useState(comments)
 
   const [updating,setUpdating] = useState(false)
 
   const currentPostRef = React.useRef(null)
   const copyButtonRef = React.useRef(null)
+  const optionsDivRef = React.useRef(null)
 
   const haveProfile = () =>{
     return profileImgs.some(imgData => imgData.$id === userId)
@@ -35,7 +35,7 @@ function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,like
           updatedLikes = newLikeData.filter(id => id !== currentUserData.$id);
           setLikesData(updatedLikes);
         }
-        await service.updatePost(postId, updatedLikes, commentsData);
+        await service.updatePostLikes(postId, updatedLikes);
         console.log(updatedLikes);
       } catch (error) {
         console.error(error);
@@ -80,6 +80,10 @@ function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,like
     }
   }
 
+  const optionToggle = () => {
+      optionsDivRef.current.classList.contains('showOptions') ? optionsDivRef.current.classList.remove('showOptions') : optionsDivRef.current.classList.add('showOptions') 
+  }
+
   const likeButton = React.useMemo(() =>(
     <>
     <div
@@ -98,8 +102,8 @@ function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,like
         {username} · ({moment(date).format('DD/MM/YY · h:mm A ')})
     </div>
     <div className='relative'>
-    <span className='text-lg cursor-pointer'><ion-icon name="ellipsis-vertical-outline"></ion-icon></span>
-    <div className='bg-white p-2 rounded-lg absolute right-0 w-[150px]'>
+    <span onClick={optionToggle} className='text-lg cursor-pointer'><ion-icon name="ellipsis-vertical-outline"></ion-icon></span>
+    <div ref={optionsDivRef} className='bg-white p-2 rounded-lg absolute right-0 w-[150px] transition-all opacity-0 z-[-1]'>
       <p onClick={copyLink} ref={copyButtonRef} className='text-md text-black p-2 cursor-pointer rounded-xl hover:bg-[#00000041]'><span className='relative top-[2px]'><ion-icon name="clipboard-outline"></ion-icon></span> Copy Link</p>
       {userId === currentUserData.$id && <p onClick={deletePost} className='text-md text-red-600 p-2 cursor-pointer rounded-xl hover:bg-[#00000041]'><span className='relative top-[2px]'><ion-icon name="trash"></ion-icon></span> Delete</p>}
     </div>
@@ -124,7 +128,7 @@ function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,like
 
   return (
     <>
-<div className='w-full hover:bg-[#262626ad] text-white border-y py-1' ref={currentPostRef}>
+<div className='w-full hover:bg-[#262626ad] bg-[#0c0c0c] text-white border-y z-10 py-1' ref={currentPostRef}>
          <div className='w-full flex'>
             <div className='h-[50px] rounded-full'>
                 <img className='h-[40px] w-[40px] rounded-full mr-2' src={haveProfile() ? String(service.getProfileImage(userId))+`&${reduxImgId}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
