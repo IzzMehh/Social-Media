@@ -106,7 +106,7 @@ function PostInput({ fetchPostFn, profileImgs = [], commentInput=false,postId=0,
                       <div className='text-2xl'><span onClick={() => removeFile(index)}
                         className='cursor-pointer hover:text-[#d4d2d270]'><ion-icon name="close"></ion-icon></span>
                       </div>
-                      <video controls src={URL.createObjectURL(url)} className='h-[200px] m-auto' />
+                      <video controls src={URL.createObjectURL(url)} className='h-[100px] sm:h-[200px] m-auto' />
                     </div>
                   )
                 }
@@ -115,7 +115,7 @@ function PostInput({ fetchPostFn, profileImgs = [], commentInput=false,postId=0,
                     <div className='text-2xl'><span onClick={() => removeFile(index)}
                       className='cursor-pointer hover:text-[#d4d2d270]'><ion-icon name="close"></ion-icon></span>
                     </div>
-                    <img src={URL.createObjectURL(url)} className='h-[200px] m-auto' />
+                    <img src={URL.createObjectURL(url)} className='h-[100px] sm:h-[200px] m-auto' />
                   </div>
                 )
               })}

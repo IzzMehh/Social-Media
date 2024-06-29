@@ -30,8 +30,8 @@ function App() {
 
     return (
         <>
-            <div className="bg-red grid h-full grid-cols-[20%,70%]">
-                <div>
+            <div className="h-full grid max-md:grid-rows-[90%,10%] md:grid-cols-[20%,80%]">
+                <div className="max-md:order-2">
                     <Sidebar/>
                 </div>
                 <div className="overflow-y-auto px-2">

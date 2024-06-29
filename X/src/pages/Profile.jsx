@@ -63,7 +63,7 @@ function Profile() {
     {
       loading ? <Loader/> :     <>
       {uploading ? null : <input type="file" ref={inputButton} hidden onChange={uploadFile} />}
-      <div className=' text-white ml-10 pt-20'>
+      <div className=' text-white md:ml-10 pt-5 md:pt-20'>
         <div className='flex'>
         <div className='w-[80px] relative'>
           <img className='w-full h-[80px] rounded-full' src={haveProfile ? String(service.getProfileImage(data.userData.$id))+`&${data.id}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
@@ -71,11 +71,11 @@ function Profile() {
           onClick={() => uploading ? null : inputButton.current.click()} 
           className='w-[100px] h-[45px] border rounded-lg hover:bg-white hover:text-black flex justify-center items-center'>{uploading ? <Uploading/> : 'Change' }</button>
         </div>
-        <div className='ml-10 mt-5 text-2xl font-content'>
+        <div className='md:ml-10 mt-5 text-2xl font-content'>
           <p>{data.userData.name}</p>
           <p className='text-sm'>{data.userData.email}</p>
         </div>
-        <div className='ml-10 mt-5'>
+        <div className='md:ml-10 mt-5'>
           <button 
           onClick={logoutFn}
           className='p-4 border rounded-full hover:bg-white hover:text-black'>Logout</button>

@@ -98,7 +98,7 @@ function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,like
   const postData  = React.useMemo(()=>(
     <div className='w-full'>
     <div className='flex justify-between'>
-    <div>
+    <div className='text-sm md:text-base'>
         {username} · ({moment(date).format('DD/MM/YY · h:mm A ')})
     </div>
     <div className='relative'>
@@ -115,10 +115,10 @@ function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,like
     </div>
     <div className={`${(totalFiles.length > 0) ? 'h-[500px]': 'hidden'}s ${(totalFiles.length > 1) ? `grid grid-cols-2 `: 'grid grid-rows-1 grid-cols-2' } ${(totalFiles.length > 2) ? `grid grid-cols-2 grid-rows-2 `: '' } gap-2`}>
       {images && images.map((id)=>(
-        <img key={id} className='h-[250px]' src={service.getFilePreview(id)}></img>
+        <img key={id} className='h-[150px] md:h-[250px]' src={service.getFilePreview(id)}></img>
       ))}
       {videos && videos.map((id)=>(
-        <video controls key={id} className='h-[250px]' src={service.getFilePreview(id)}></video>
+        <video controls key={id} className='h-[150px] md:h-[250px]' src={service.getFilePreview(id)}></video>
       ))}
     </div>
     </Link>
