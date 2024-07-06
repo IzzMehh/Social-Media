@@ -152,17 +152,14 @@ class AppService{
         }
     }
 
-    async getAllComment(postId){
+    async getAllComment(){
         try {
             return await this.database.listDocuments(
                 config.appwriteDatabaseId,
                 config.appwriteCommentCollectionId,
-                [
-                    Query.equal("postId",[postId])
-                ]
             )
         } catch (error) {
-            
+            console.log(error)
         }
     }
 
@@ -219,7 +216,7 @@ class AppService{
         }
     }
 
-    async isProfile(){
+    async getAllProfileImages(){
         try {
             return await this.userProfile.listFiles(
                 config.appwriteUserProfileId,

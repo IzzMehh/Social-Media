@@ -1,24 +1,23 @@
 import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import service from '../appwrite/Service';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
+import { fetchAppwriteData } from '../store/serviceSlice';
 
-function PostInput({ fetchPostFn, profileImgs = [], commentInput=false,postId=0, fetchData=null, reduxImgId }) {
+function PostInput({profileImgs = [], commentInput=false,postId=0, fetchData=null, reduxImgId }) {
   const inputDiv = useRef(null);
   const { register, handleSubmit, setValue } = useForm();
 
   const [uploading, setUploading] = useState(false)
-
   const [file, setFile] = useState([])
 
   const fileId = []
   const videoId =[]
 
   const userData = useSelector((state) => state.auth.userData)
+  const dispatch = useDispatch()
 
-  const haveProfile = () => {
-    return profileImgs.some(imgData => imgData.$id === userData.$id)
-  }
+  const haveProfile = profileImgs.some(imgData => imgData.$id === userData.$id)
 
   const createPost = async (data) => {
     setUploading(true)
@@ -36,7 +35,7 @@ function PostInput({ fetchPostFn, profileImgs = [], commentInput=false,postId=0,
     }
 
     await service.createPost(data.content, fileId,videoId, userData.$id, userData.name)
-    fetchPostFn(false)
+    dispatch(fetchAppwriteData())
     setUploading(false)
   };
 
@@ -81,7 +80,7 @@ function PostInput({ fetchPostFn, profileImgs = [], commentInput=false,postId=0,
       <form onSubmit={handleSubmit(commentInput ? createComment : createPost)} className="w-full text-white border-y py-1">
         <div className='w-full flex'>
           <div>
-            <img className='h-[40px] w-[40px] rounded-full' src={haveProfile() ? String(service.getProfileImage(userData.$id)) + `&${reduxImgId}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
+            <img className='h-[40px] w-[40px] rounded-full' src={haveProfile ? String(service.getProfileImage(userData.$id)) + `&${reduxImgId}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
           </div>
           <div className='w-full relative'>
             <textarea

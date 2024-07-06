@@ -1,43 +1,40 @@
 import React, { useState } from 'react'
 import { AllPosts, Loader, PostInput } from '../components/index'
 import service from '../appwrite/Service'
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux'
+import { fetchAppwriteData } from '../store/serviceSlice'
 
 function Home() {
-  const [postData, setPostData] = useState([])
-  const [profileImgs,setProfileImgs] = useState([])
-  const [fetchPost, setFetchPost] = useState(false)
-  const reduxData = useSelector(state => state.auth)
+  const serviceData = useSelector(state => state.service)
 
-  React.useEffect(() => {
-    try {
-      service.getAllPost().then((posts) => {
-        setPostData(posts.documents.reverse())
-        setFetchPost(true)
+  console.log(serviceData.allPosts)
 
-        return service.isProfile()
-      }).then((profileImgs)=>{
-        setProfileImgs(profileImgs.files)
-      })
-    } catch (error) {
-      console.log(error)
-      setFetchPost(false)
-      setProfileImgs(false)
-    }
-  }, [fetchPost])
-  
+  const [newPostsCount,setNewPostsCount] = useState(null)
 
+  const dispatch = useDispatch()
+
+  React.useEffect(()=>{
+    setInterval(async() => {
+      const posts = await service.getAllPost()
+      posts.total>serviceData.allPosts.length
+        ? setNewPostsCount(posts.total-serviceData.allPosts.length)
+      : setNewPostsCount(null)
+    }, 10000);
+  },[])
+
+  console.log(serviceData)
   return (
     <>
-    <PostInput fetchPostFn={setFetchPost} reduxImgId={reduxData.id} profileImgs={profileImgs}/>
-      {fetchPost ?
-        <>
-          {postData && postData.map((post) => (
-            <AllPosts key={post.$id} {...post} postId={post.$id} reduxImgId={reduxData.id} profileImgs={profileImgs} date={post.$updatedAt}  />
-          ))}  
-          </> :
-          <Loader/>
-      }
+    <PostInput reduxImgId={serviceData.cacheImagesid} profileImgs={serviceData.usersProfile}/>
+    {newPostsCount && <div
+    onClick={() => {
+      dispatch(fetchAppwriteData())
+      setNewPostsCount(null)
+    }}
+     className='text-white text-center py-2 hover:bg-[#ffffff6c] cursor-pointer'>Load {newPostsCount} posts</div>}
+          {serviceData.allPosts && serviceData.allPosts.map((post) => (
+            <AllPosts key={post.$id} {...post} postId={post.$id} reduxImgId={serviceData.cacheImagesid} profileImgs={serviceData.usersProfile} date={post.$updatedAt}  />
+          ))} 
     </>
 
   )

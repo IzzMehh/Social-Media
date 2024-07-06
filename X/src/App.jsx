@@ -3,8 +3,9 @@ import { Sidebar } from "./components/index"
 import { Outlet, useNavigate } from "react-router-dom"
 import authservice from "./appwrite/Auth"
 import { useDispatch, useSelector } from "react-redux"
-import { logout, login } from "./store/authSlice"
+import { logout, login} from "./store/authSlice"
 import {Loader} from "./components/index"
+import { fetchAppwriteData } from "./store/serviceSlice"
 
 function App() {
     const dispatch = useDispatch()
@@ -14,7 +15,12 @@ function App() {
 
     const [isLogged, setIsLogged] = useState(false)
 
+
     React.useEffect(() => {
+        console.log('dispatching')
+        
+    dispatch(fetchAppwriteData())
+    console.log('dispacthed')
         authservice.getCurrentUser()
             .then((userData) => {
                 if (userData) {
@@ -26,7 +32,7 @@ function App() {
                     navigate('/login')
                 }
             })
-    }, [navigate, authStatus])
+    }, [authStatus])
 
     return (
         <>
