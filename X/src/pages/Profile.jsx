@@ -3,37 +3,22 @@ import {useSelector} from "react-redux"
 import service from '../appwrite/Service'
 import { AllPosts,Loader,Uploading } from '../components/index'
 import { useDispatch } from 'react-redux'
-import {logout, regenerateId} from '../store/authSlice'
+import {logout} from '../store/authSlice'
 import authservice from '../appwrite/Auth'
 import { useNavigate } from "react-router-dom"
+import { regenerateId } from '../store/serviceSlice'
 
 function Profile() {
-  const data = useSelector((state)=>state.auth)
+  const userData = useSelector((state)=>state.auth.userData)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const [userPosts,setUserPosts] = useState([])
-  const [haveProfile, setHaveProfile] = useState(false)
   const inputButton = useRef(null)
-  const [loading,setLoding] = useState(true) 
   const [uploading,setUploading] = useState(false)
+  
+  const serviceData = useSelector(state => state.service)
 
-  const fetchData = () =>{
-    service.getUserPost(data.userData.$id).then((userPosts)=>{
-      setUserPosts(userPosts.documents.reverse())
-
-      return service.isProfile()
-    }).then(profileData => {
-      setHaveProfile(profileData.files.some(imgData => imgData.$id === data.userData.$id))
-      setLoding(false)
-      setUploading(false)
-      dispatch(regenerateId())
-    })
-  }
-
-  React.useEffect(()=>{
-    fetchData()
-  },[])
+  const haveProfile = serviceData.usersProfile.some(profileImgs => profileImgs.$id === userData.$id)
 
   const logoutFn = async() =>{
     try {
@@ -51,29 +36,27 @@ function Profile() {
     if(!uploading){
     setUploading(true)
     if(haveProfile){
-      await service.deleteProfileImage(data.userData.$id)
+      await service.deleteProfileImage(userData.$id)
     }
-    await service.uploadProfileImage(data.userData.$id,e.target.files[0])
-    fetchData()
+    await service.uploadProfileImage(userData.$id,e.target.files[0])
+    dispatch(regenerateId())
   }
 }
 
   return (
     <>
-    {
-      loading ? <Loader/> :     <>
       {uploading ? null : <input type="file" ref={inputButton} hidden onChange={uploadFile} />}
       <div className=' text-white pt-5 md:pt-20'>
         <div className='flex'>
         <div className='w-[80px] relative'>
-          <img className='w-full h-[80px] rounded-full' src={haveProfile ? String(service.getProfileImage(data.userData.$id))+`&${data.id}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
+          <img className='w-full h-[80px] rounded-full' src={haveProfile ? String(service.getProfileImage(userData.$id))+`&${serviceData.cacheImagesid}` : service.getProfileImage('66796078001f62ddc452')} alt="" />
           <button
           onClick={() => uploading ? null : inputButton.current.click()} 
           className='w-[100px] h-[45px] border rounded-lg hover:bg-white hover:text-black flex justify-center items-center'>{uploading ? <Uploading/> : 'Change' }</button>
         </div>
         <div className='md:ml-5 mt-5 text-2xl font-content'>
-          <p>{data.userData.name}</p>
-          <p className='text-sm'>{data.userData.email}</p>
+          <p>{userData.name}</p>
+          <p className='text-sm'>{userData.email}</p>
         </div>
         <div className='md:ml-5 mt-5'>
           <button 
@@ -82,14 +65,14 @@ function Profile() {
         </div>
         </div>
         <div className='mt-10'>
-          {userPosts && userPosts.map((post)=>(
-          <AllPosts {...post} postId={post.$id} profileImgs={haveProfile ?[{$id:data.userData.$id}] : [{$id:0}]} reduxImgId={data.id} date={post.$updatedAt} />
-          ))}
-          
+          {serviceData && serviceData.allPosts
+          .filter((post)=>post.userId === userData.$id)
+          .map(post=>(
+            <AllPosts key={post.$id} {...post} postId={post.$id} profileImgs={haveProfile ?[{$id:userData.$id}] : [{$id:0}]} reduxImgId={serviceData.cacheImagesid} date={post.$updatedAt} />
+          ))
+          }
         </div>
       </div>
-      </>
-    }
     </>
   )
 }
