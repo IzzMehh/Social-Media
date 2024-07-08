@@ -11,6 +11,14 @@ function Login() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  React.useEffect(()=>{
+    authservice.getCurrentUser().then(data=>{
+      if(data){
+        navigate('/home')
+      }
+    })
+  },[])
+
   const con = async(data) =>{
     console.log(data)
     try {
