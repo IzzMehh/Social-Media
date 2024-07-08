@@ -4,9 +4,8 @@ import service from '../appwrite/Service'
 import moment from 'moment'
 import { useSelector } from 'react-redux'
 
-function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,likes=[],comments,username,date,reduxImgId}) {
+function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,likes=[],comments=[],username,date,reduxImgId}) {
   const currentUserData = useSelector(state => state.auth.userData)
-  console.log(likes)
   const [likesData,setLikesData] = useState(likes)
 
   const [updating,setUpdating] = useState(false)
@@ -36,7 +35,6 @@ function AllPosts({userId,postId,images=[],videos=[],profileImgs=[],content,like
           setLikesData(updatedLikes);
         }
         await service.updatePostLikes(postId, updatedLikes);
-        console.log(updatedLikes);
       } catch (error) {
         console.error(error);
       } finally {
