@@ -13,6 +13,14 @@ function Signup() {
 
   const [uploading,setUploading] = useState(false)
 
+  React.useEffect(()=>{
+    authservice.getCurrentUser().then(data=>{
+      if(data){
+        navigate("/home") 
+      }
+    })
+  },[])
+
   const onSubmit = async (data) => {
     if(!uploading){
     try {
