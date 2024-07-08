@@ -7,53 +7,33 @@ import {CommentSection, PostInput} from '../components/index'
 
 function Post() {
     const { postId } = useParams()
-    const reduxData = useSelector(state => state.auth)
+    const serviceData = useSelector(state=>state.service)
 
+    // console.log(serviceData)
     const [error,setError] = useState(null)
     const [data,setData] = useState(null)
     const [fetchingData,setFetchingData] = useState(true)
     const [updateComments,setUpdateComments] = useState(false)
     const [commentsData,setCommentData] = useState([])
     const [profileImgs,setProfileImgs] = useState([])
+    const [postData,setPostData] = useState([])
     
     React.useEffect(()=>{
-        const getPostData = async() =>{
-            try {
-                const data = await service.getPost(postId)
-                if(data){
-                    setData(data)
-                    console.log(data)
-                    const comments = await service.getAllComment(postId)
-                    if(comments){
-                        setCommentData(comments.documents) 
-                        const images = await service.isProfile()
-                        if(images){
-                            setError(null)
-                            setProfileImgs(images.files)
-                            setFetchingData(false)
-                            setUpdateComments(false)
-                        }
-                    }
-                }else{
-                setError('Cannot find any post with Id: '+ postId)
-                }
-            } catch (error) {
-            }
-        }
-        getPostData()
-    },[fetchingData,updateComments])
+      setPostData(serviceData.allPosts.filter(post=>post.$id===postId))
+      setProfileImgs(serviceData.usersProfile)
+      setCommentData(serviceData.allComments.filter(comment => comment.postId === postId))
+    },[serviceData])
+
   return (
     <>
-    {fetchingData ? 
-    <div className='text-white'>{error} </div>
-     : <> 
-     <AllPosts {...data} reduxImgId={reduxData.id} profileImgs={profileImgs} postId={postId} />
-     <PostInput commentInput={true} reduxImgId={reduxData.id} postId={postId} fetchData={setUpdateComments} profileImgs={profileImgs}/>
+    {postData.length > 0 ? postData && profileImgs && commentsData ? <> 
+    {postData[0] ? <AllPosts {...postData[0]} date={postData[0].$createdAt} reduxImgId={serviceData.cacheImagesid} profileImgs={profileImgs} postId={postId} /> : null}
+     <PostInput commentInput={true} reduxImgId={serviceData.cacheImagesid} postId={postId} fetchData={setUpdateComments} profileImgs={profileImgs}/>
      {updateComments ? null :  commentsData.map((commentData)=>(
-         <CommentSection key={commentData.$id} profileImgs={profileImgs} reduxImgId={reduxData.id} {...commentData} />
+         <CommentSection key={commentData.$id} profileImgs={profileImgs} reduxImgId={serviceData.cacheImagesid} {...commentData} />
      ))}
-     </>
-    }
+     </> : null
+     : <div className='text-white'>Cannot find post with the id- {postId}</div>}
     </>
   )
 }

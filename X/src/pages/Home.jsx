@@ -1,26 +1,33 @@
 import React, { useState } from 'react'
-import { AllPosts, Loader, PostInput } from '../components/index'
+import { AllPosts, PostInput } from '../components/index'
 import service from '../appwrite/Service'
 import { useSelector,useDispatch } from 'react-redux'
 import { fetchAppwriteData } from '../store/serviceSlice'
 
 function Home() {
-  const serviceData = useSelector(state => state.service)
+  const serviceData = useSelector(state => state.service);
+  const dispatch = useDispatch();
 
-  console.log(serviceData.allPosts)
-
-  const [newPostsCount,setNewPostsCount] = useState(null)
-
-  const dispatch = useDispatch()
-
-  React.useEffect(()=>{
-    setInterval(async() => {
-      const posts = await service.getAllPost()
-      posts.total>serviceData.allPosts.length
-        ? setNewPostsCount(posts.total-serviceData.allPosts.length)
-      : setNewPostsCount(null)
+  const [newPostsCount, setNewPostsCount] = useState(null);
+  
+  React.useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const posts = await service.getAllPost();
+        if (posts.total > serviceData.allPosts.length) {
+          const a = Number(posts.total) - Number(serviceData.allPosts.length);
+          setNewPostsCount(a);
+        } else {
+          setNewPostsCount(null);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }, 10000);
-  },[])
+  
+    return () => clearInterval(interval);
+  }, [serviceData.allPosts.length]);
+  
 
   console.log(serviceData)
   return (

@@ -17,22 +17,23 @@ function App() {
 
 
     React.useEffect(() => {
-        console.log('dispatching')
-        
-    dispatch(fetchAppwriteData())
-    console.log('dispacthed')
-        authservice.getCurrentUser()
-            .then((userData) => {
+        dispatch(fetchAppwriteData()).then(() => {
+            authservice.getCurrentUser().then((userData) => {
                 if (userData) {
-                    dispatch(login({ userData }))
-                    setIsLogged(true)
+                    dispatch(login({ userData }));
+                    setIsLogged(true);
+                } else {
+                    dispatch(logout());
+                    navigate('/login');
                 }
-                else {
-                    dispatch(logout())
-                    navigate('/login')
-                }
-            })
-    }, [authStatus])
+            }).catch((error) => {
+                console.error("Error fetching user data:", error);
+            });
+        }).catch((error) => {
+            console.error("Error fetching appwrite data:", error);
+        });
+    }, [authStatus]);
+    
 
     return (
         <>
