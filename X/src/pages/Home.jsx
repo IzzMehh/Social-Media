@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
-import { AllPosts, PostInput } from '../components/index'
+import { PostInput } from '../components/index'
 import service from '../appwrite/Service'
 import { useSelector,useDispatch } from 'react-redux'
 import { fetchAppwriteData } from '../store/serviceSlice'
+import Post from '../components/Posts/Post'
 
 function Home() {
   const serviceData = useSelector(state => state.service);
   const dispatch = useDispatch();
+  
+  console.log(serviceData.deletedPost)
 
   const [newPostsCount, setNewPostsCount] = useState(null);
   
@@ -39,9 +42,11 @@ function Home() {
       setNewPostsCount(null)
     }}
      className='text-white text-center py-2 hover:bg-[#ffffff6c] cursor-pointer'>Load {newPostsCount} posts</div>}
-          {serviceData.allPosts && serviceData.allPosts.map((post) => (
-            <AllPosts key={post.$id} {...post} postId={post.$id} reduxImgId={serviceData.cacheImagesid} profileImgs={serviceData.usersProfile} date={post.$updatedAt}  />
-          ))} 
+     {serviceData.allPosts &&
+     serviceData.allPosts.filter(postData => !serviceData.deletedPost.includes(postData.$id)).map((post) => (
+     <Post key={post.$id} {...post} postId={post.$id} reduxImgId={serviceData.cacheImagesid} profileImgs={serviceData.usersProfile} date={post.$updatedAt}/>
+    ))}
+
     </>
 
   )

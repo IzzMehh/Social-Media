@@ -68,7 +68,8 @@ function PostInput({profileImgs = [], commentInput=false,postId=0, fetchData=nul
       await service.createComment(userData.$id,postId,userData.name,data.content)
       const getPostData = await service.getPost(postId) 
       await service.updatePostComments(postId,[...getPostData.comments,userData.$id])
-      fetchData(true)
+      await dispatch(fetchAppwriteData())
+      // fetchData(true)
       setUploading(false)
     } catch (error) {
       console.log(error)
