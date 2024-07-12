@@ -7,6 +7,7 @@ const initialState = {
     allPosts: [],
     allComments: [],
     usersProfile: [],
+    deletedPost: [],
 };
 
 export const fetchAppwriteData = createAsyncThunk('service/fetchAppwriteData', async () => {
@@ -20,6 +21,9 @@ const serviceSlice = createSlice({
     reducers: {
         regenerateId: (state) => {
             state.id = randomId();
+        },
+        addInDeletedList:(state,action)=>{
+            state.deletedPost.push(action.payload)
         },
     },
     extraReducers: (builder) => {
@@ -38,6 +42,6 @@ const serviceSlice = createSlice({
     },
 });
 
-export const { regenerateId } = serviceSlice.actions;
+export const { regenerateId,addInDeletedList,addInLikedList } = serviceSlice.actions;
 
 export default serviceSlice.reducer;

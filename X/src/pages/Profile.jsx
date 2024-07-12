@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import {useSelector} from "react-redux"
 import service from '../appwrite/Service'
-import { AllPosts,Loader,Uploading } from '../components/index'
+import { Post,Uploading } from '../components/index'
 import { useDispatch } from 'react-redux'
 import {logout} from '../store/authSlice'
 import authservice from '../appwrite/Auth'
@@ -66,10 +66,12 @@ function Profile() {
         </div>
         <div className='mt-10'>
           {serviceData && serviceData.allPosts
-          .filter((post)=>post.userId === userData.$id)
-          .map(post=>(
-            <AllPosts key={post.$id} {...post} postId={post.$id} profileImgs={haveProfile ?[{$id:userData.$id}] : [{$id:0}]} reduxImgId={serviceData.cacheImagesid} date={post.$updatedAt} />
-          ))
+          .filter((post)=>post.userId === userData.$id && !serviceData.deletedPost.includes(post.$id))
+          .map(post=>{
+            console.log(post)
+            return(
+            <Post key={post.$id} {...post} postId={post.$id} profileImgs={haveProfile ?[{$id:userData.$id}] : [{$id:0}]} reduxImgId={serviceData.cacheImagesid} date={post.$updatedAt} />
+          )})
           }
         </div>
       </div>
