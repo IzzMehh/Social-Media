@@ -67,11 +67,9 @@ function Profile() {
         <div className='mt-10'>
           {serviceData && serviceData.allPosts
           .filter((post)=>post.userId === userData.$id && !serviceData.deletedPost.includes(post.$id))
-          .map(post=>{
-            console.log(post)
-            return(
+          .map(post=>(
             <Post key={post.$id} {...post} postId={post.$id} profileImgs={haveProfile ?[{$id:userData.$id}] : [{$id:0}]} reduxImgId={serviceData.cacheImagesid} date={post.$updatedAt} />
-          )})
+          ))
           }
         </div>
       </div>

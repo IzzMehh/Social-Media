@@ -4,6 +4,7 @@ import Signup from "./Signup";
 import About from "./About";
 import Profile from "./Profile";
 import Post from "./Post";
+import Default from "./Default";
 
 export{
     Home,
@@ -12,4 +13,5 @@ export{
     About,
     Profile,
     Post,
+    Default,
 }

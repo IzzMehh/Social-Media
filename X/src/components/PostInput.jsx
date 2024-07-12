@@ -4,7 +4,7 @@ import service from '../appwrite/Service';
 import { useSelector,useDispatch } from 'react-redux';
 import { fetchAppwriteData } from '../store/serviceSlice';
 
-function PostInput({profileImgs = [], commentInput=false,postId=0, fetchData=null, reduxImgId }) {
+function PostInput({profileImgs = [], commentInput=false,postId=0, reduxImgId }) {
   const inputDiv = useRef(null);
   const { register, handleSubmit, setValue } = useForm();
 

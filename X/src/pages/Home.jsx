@@ -8,8 +8,6 @@ import Post from '../components/Posts/Post'
 function Home() {
   const serviceData = useSelector(state => state.service);
   const dispatch = useDispatch();
-  
-  console.log(serviceData.deletedPost)
 
   const [newPostsCount, setNewPostsCount] = useState(null);
   
@@ -32,7 +30,6 @@ function Home() {
   }, [serviceData.allPosts.length]);
   
 
-  console.log(serviceData)
   return (
     <>
     <PostInput reduxImgId={serviceData.cacheImagesid} profileImgs={serviceData.usersProfile}/>

@@ -33,9 +33,6 @@ const serviceSlice = createSlice({
                 state.allPosts = action.payload.allPosts;
                 state.usersProfile = action.payload.usersProfile;
             })
-            .addCase(fetchAppwriteData.pending, (state) => {
-                console.log('Fetching data!!!!');
-            })
             .addCase(fetchAppwriteData.rejected, (state, action) => {
                 console.error('Error fetching data:', action.error.message);
             });
