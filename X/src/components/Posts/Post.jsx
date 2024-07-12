@@ -33,9 +33,6 @@ function Post({userId,postId,images=[],videos=[],profileImgs=[],content,likes=[]
     }
   }, [likesData,updating]);
 
-  console.log('re-render')
-  
-  
   const handleRedirect = (e) =>{
     if(location.pathname === `/posts/${postId}`){
       e.preventDefault()
