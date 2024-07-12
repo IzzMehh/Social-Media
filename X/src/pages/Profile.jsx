@@ -40,6 +40,7 @@ function Profile() {
     }
     await service.uploadProfileImage(userData.$id,e.target.files[0])
     dispatch(regenerateId())
+    setUploading(false)
   }
 }
 
