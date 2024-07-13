@@ -13,6 +13,7 @@ function Login() {
   const navigate = useNavigate()
 
   const [isLogged,setLogged] = React.useState(true)
+  const [error,setError] = React.useState(false)
 
   React.useEffect(()=>{
     authservice.getCurrentUser().then(data=>{
@@ -25,8 +26,6 @@ function Login() {
   },[])
 
   const con = async(data) =>{
-    console.log(data)
-    try {
       const session = await authservice.login(data)
       if(session){
         const userData = await authservice.getCurrentUser()
@@ -34,11 +33,9 @@ function Login() {
           dispatch(login(userData))
           navigate('/home')
         }
+      }else{
+        setError(true)
       }
-      
-    } catch (error) {
-      
-    }
   }
   
   return (
@@ -72,6 +69,7 @@ function Login() {
         )} placeholder='Enter your password' className='px-3 py-2 outline-none bg-transparent border rounded-lg w-[90%]' type="password" name="password" />
         </div>
         {errors.password && <p className='text-red-600'>{errors.password.message}</p> }
+        {error ? <div className='text-red-600'>Invalid credentials. Please check the email and password.</div> : null}
 
         <button className='bg-blue-700 w-[90%] py-3 rounded-md mt-3'>Login</button>
         <div className=' text-sm mt-2 sm:text-base'>Not registered yet? <span className='text-blue-600'>Create an account</span> <Link to="/signup" className='text-[#FFA3BE]'>SignUp</Link></div>
