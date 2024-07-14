@@ -32,7 +32,7 @@ function Home() {
 
   return (
     <>
-    <PostInput reduxImgId={serviceData.cacheImagesid} profileImgs={serviceData.usersProfile}/>
+    <PostInput reduxImgId={serviceData.cacheImagesid} profileImgs={serviceData.usersProfile} placeholder="Whats on your Mind!?"/>
     {newPostsCount && <div
     onClick={() => {
       dispatch(fetchAppwriteData())
