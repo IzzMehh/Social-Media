@@ -4,7 +4,7 @@ import service from '../appwrite/Service';
 import { useSelector,useDispatch } from 'react-redux';
 import { fetchAppwriteData } from '../store/serviceSlice';
 
-function PostInput({profileImgs = [], commentInput=false,postId=0, reduxImgId }) {
+function PostInput({profileImgs = [], commentInput=false,postId=0, reduxImgId,placeholder="" }) {
   const inputDiv = useRef(null);
   const { register, handleSubmit, setValue } = useForm();
 
@@ -92,7 +92,7 @@ function PostInput({profileImgs = [], commentInput=false,postId=0, reduxImgId })
               maxLength={300}
               name="content"
               autoComplete='off'
-              placeholder='Whats on your Mind!?'
+              placeholder={placeholder}
               className='w-full p-2 bg-transparent outline-none focus:border-b'
             ></textarea>
 

@@ -22,7 +22,7 @@ function Post() {
     <>
     {postData.length > 0 ? postData && profileImgs && commentsData ? <> 
     {postData[0] ? <PostFormate {...postData[0]} date={postData[0].$createdAt} reduxImgId={serviceData.cacheImagesid} profileImgs={profileImgs} postId={postId} /> : null}
-     <PostInput commentInput={true} reduxImgId={serviceData.cacheImagesid} postId={postId} profileImgs={profileImgs}/>
+     <PostInput commentInput={true} reduxImgId={serviceData.cacheImagesid} postId={postId} profileImgs={profileImgs} placeholder='Post your reply.'/>
      {commentsData.map((commentData)=>(
          <CommentSection key={commentData.$id} profileImgs={profileImgs} reduxImgId={serviceData.cacheImagesid} {...commentData} />
      ))}

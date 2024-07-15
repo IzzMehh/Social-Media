@@ -10,7 +10,7 @@ function Likes({likesData,handleLike}) {
     <>
     <div
     onClick={handleLike}  
-    className={`text-xl cursor-pointer mr-1 ${isLiked ? 'text-red' : null}`}><ion-icon name={isLiked ? 'heart' : 'heart-outline'}></ion-icon>
+    className={`text-xl cursor-pointer mr-1 ${isLiked ? 'text-red-600' : null}`}><ion-icon name={isLiked ? 'heart' : 'heart-outline'}></ion-icon>
     </div>
     <span className=''>{likesData.length}</span>
     </>

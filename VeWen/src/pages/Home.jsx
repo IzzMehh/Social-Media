@@ -32,7 +32,7 @@ function Home() {
 
   return (
     <>
-    <PostInput reduxImgId={serviceData.cacheImagesid} profileImgs={serviceData.usersProfile}/>
+    <PostInput reduxImgId={serviceData.cacheImagesid} profileImgs={serviceData.usersProfile} placeholder="Whats on your Mind!?"/>
     {newPostsCount && <div
     onClick={() => {
       dispatch(fetchAppwriteData())
@@ -41,7 +41,7 @@ function Home() {
      className='text-white text-center py-2 hover:bg-[#ffffff6c] cursor-pointer'>Load {newPostsCount} posts</div>}
      {serviceData.allPosts &&
      serviceData.allPosts.filter(postData => !serviceData.deletedPost.includes(postData.$id)).map((post) => (
-     <Post key={post.$id} {...post} postId={post.$id} reduxImgId={serviceData.cacheImagesid} profileImgs={serviceData.usersProfile} date={post.$updatedAt}/>
+     <Post key={post.$id} {...post} postId={post.$id} reduxImgId={serviceData.cacheImagesid} profileImgs={serviceData.usersProfile} date={post.$createdAt}/>
     ))}
 
     </>
