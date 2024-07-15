@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import service from '../appwrite/Service';
 import { useSelector,useDispatch } from 'react-redux';
 import { fetchAppwriteData } from '../store/serviceSlice';
+import {Button} from './index';
 
 function PostInput({profileImgs = [], commentInput=false,postId=0, reduxImgId,placeholder="" }) {
   const inputDiv = useRef(null);
@@ -139,8 +140,7 @@ function PostInput({profileImgs = [], commentInput=false,postId=0, reduxImgId,pl
             </div> }
             
               <div className='flex justify-end'>
-                <button type="submit" className='relative right-0 bg-blue-700 py-4 px-10 font-semibold rounded-full'>
-                  {uploading ?
+                  <Button text={uploading ?
                     <>
                       <div
                         class="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
@@ -151,8 +151,7 @@ function PostInput({profileImgs = [], commentInput=false,postId=0, reduxImgId,pl
                       </div>
                     </>
                     :
-                    'Post'}
-                </button>
+                    'Post'} classes={'right-0 font-semibold px-10 '}/>
               </div>
             </div>
           </div>
