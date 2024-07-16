@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import service from '../../appwrite/Service'
 import {PostBody,Likes} from './components/index'
 import likesHandler from './functions/LikesHandler'
-import { fetchAppwriteData } from '../../store/serviceSlice'
+import { fetchAppwriteData, fetchAllPostData } from '../../store/serviceSlice'
 
 
 function Post({userId,postId,images=[],videos=[],profileImgs=[],content,likes=[],comments=[],username,date,reduxImgId}) {
@@ -27,7 +27,7 @@ function Post({userId,postId,images=[],videos=[],profileImgs=[],content,likes=[]
     if (!updating) {
       setUpdating(true);
       likesHandler(setLikesData,postId,currentUserData).then(()=>{
-        dispatch(fetchAppwriteData())
+        dispatch(fetchAllPostData())
         setUpdating(false)
       })
     }
