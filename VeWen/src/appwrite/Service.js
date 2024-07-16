@@ -23,7 +23,7 @@ class AppService{
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 [
-                    Query.limit(250)
+                    Query.limit(2500)
                 ]
             )
         } catch (error) {

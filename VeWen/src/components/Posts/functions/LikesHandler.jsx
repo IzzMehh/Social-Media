@@ -13,7 +13,7 @@ async function likesHandler(setLikesData,postId,currentUserData){
           setLikesData(updatedLikes);
         }
         await service.updatePostLikes(postId, updatedLikes);
-        console.log('did likes handler')
+
       } catch (error) {
         console.error(error);
       }
