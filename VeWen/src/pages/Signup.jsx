@@ -5,6 +5,7 @@ import authservice from '../appwrite/Auth';
 import { login } from '../store/authSlice';
 import { useDispatch } from 'react-redux';
 import {Uploading, Loader} from '../components/index';
+import { Error } from '../components/ui/Toasts/index'
 
 
 function Signup() {
@@ -13,8 +14,8 @@ function Signup() {
   const navigate = useNavigate();
 
   const [uploading,setUploading] = useState(false)
-
   const [isLogged,setLogged] = React.useState(true)
+  const [error,setError] = React.useState(false)
 
   React.useEffect(()=>{
     authservice.getCurrentUser().then(data=>{
@@ -39,6 +40,7 @@ function Signup() {
         }
       }
     } catch (error) {
+      setError(true)
       console.error('Signup failed:', error);
     }
   }
@@ -46,6 +48,7 @@ function Signup() {
 
   return (
     isLogged ? <Loader/> : <div className='w-full flex'>
+      {error ? <Error message={'Signup failed'} setError={setError}/> : null}
     <div className='text-white flex justify-center w-full lg:w-[60%] '>
       <div className='mt-[50px]  flex  justify-center w-[600px]'>
         <div className='w-[90%]'>
