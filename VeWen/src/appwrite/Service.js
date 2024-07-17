@@ -23,7 +23,7 @@ class AppService{
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 [
-                    Query.limit(250)
+                    Query.limit(1000)
                 ]
             )
         } catch (error) {
@@ -160,6 +160,9 @@ class AppService{
             return await this.database.listDocuments(
                 config.appwriteDatabaseId,
                 config.appwriteCommentCollectionId,
+                [
+                    Query.limit(1000)
+                ]
             )
         } catch (error) {
             console.log(error)
