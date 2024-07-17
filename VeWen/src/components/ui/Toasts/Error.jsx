@@ -5,7 +5,7 @@ function Error({ message, setError }) {
   React.useEffect(() => {
     setTimeout(() => {
       setError(false)
-    },1000)
+    },3000)
   }, [])
 
   return (
