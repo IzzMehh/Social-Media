@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link,NavLink} from "react-router-dom"
-import Button from '../Button'
+import Button from '../Buttons/Button'
 
 function Sidebar() {
   return(

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Github } from '../components/index'
 
 function About() {
   return (
@@ -24,7 +25,9 @@ function About() {
     <div className='mb-5'>
         <h2 className='text-2xl'>Join Us!</h2>
         <p>We'd love for you to dive into the code, give feedback, or even contribute your own genius ideas. Let's make something amazing together!</p>
-        <span className='text-blue-400'><a href="https://github.com/IzzMehh/Social-Media" target='_blank'>Github : <span className='relative top-[2px]'><ion-icon name="logo-github"></ion-icon></span></a></span>
+        <div className='mt-5'>
+        <Github/>
+        </div>
     </div>
 
     </div>
